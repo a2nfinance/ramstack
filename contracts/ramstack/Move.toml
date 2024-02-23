@@ -1,0 +1,18 @@
+[package]
+name = "ramstack"
+version = "1.0.0"
+authors = ["levi@a2n.finance"]
+
+[addresses]
+std = "0x1"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+ramstack='081c76a712da7e9f93dece3c7eeab41ea8a0fe25c752d10e77f1aba77f51725b'
+
+[dev-addresses]
+
+[dependencies]
+AptosFramework = { local = "../../../aptos-core/aptos-move/framework/aptos-framework" }
+AptosStdlib = { local = "../../../aptos-core/aptos-move/framework/aptos-stdlib" }
+
+[dev-dependencies]
