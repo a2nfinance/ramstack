@@ -1,17 +1,40 @@
 module ramstack::box_muller {
     use std::vector;
-    use std::debug;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     use aptos_std::math_fixed64;
     use aptos_std::math128;
+    #[test_only]
+    use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
+    #[test_only]
+    use std::debug;
+    #[test_only]
+    use aptos_framework::randomness;
+
+
     use ramstack::cos_sin;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::pi;
     const LN2: u128 = 12786308645202655660;
-    public fun uniform_to_normal(random_numbers: vector<u64>, range: u64): (vector<u64>, vector<u64>) {
+
+    public fun uniform_to_normal(random_numbers: vector<u64>, range: u128): (vector<FixedPoint64WithSign>, vector<FixedPoint64WithSign>) {
         let (first_part, second_part) = get_two_parts(random_numbers);
 
-        (first_part, second_part)
+  
+        let len_first_part = vector::length(&first_part);
+
+        let nomalized_first_part = vector::empty<FixedPoint64WithSign>();
+        let nomalized_second_part = vector::empty<FixedPoint64WithSign>();
+
+        let i = 0;
+        while(i < len_first_part) {
+            let (z0, z1) = normalize_u1_u2(*vector::borrow(&first_part, i), *vector::borrow(&second_part, i), range);
+            vector::push_back(&mut nomalized_first_part, z0);
+            vector::push_back(&mut nomalized_second_part, z1);
+            i = i + 1;
+        };
+
+        (nomalized_first_part, nomalized_second_part)
+
     }
 
     fun normalize_u1_u2(u1: u128, u2: u128, range: u128): (FixedPoint64WithSign, FixedPoint64WithSign) {
@@ -60,18 +83,18 @@ module ramstack::box_muller {
     }
 
 
-    fun get_two_parts(random_numbers: vector<u64>): (vector<u64>, vector<u64>) {
+    fun get_two_parts(random_numbers: vector<u64>): (vector<u128>, vector<u128>) {
         let n = vector::length(&random_numbers);
-        let first_part = vector::empty<u64>();
-        let second_part = vector::empty<u64>();
+        let first_part = vector::empty<u128>();
+        let second_part = vector::empty<u128>();
 
         let i = 0;
 
         while (i < n) {
             if (i < n / 2) {
-                vector::push_back(&mut first_part, *vector::borrow(&random_numbers, i))
+                vector::push_back(&mut first_part, (*vector::borrow(&random_numbers, i) as u128))
             } else {
-                vector::push_back(&mut second_part, *vector::borrow(&random_numbers, i))
+                vector::push_back(&mut second_part,(*vector::borrow(&random_numbers, i) as u128))
             };
             i = i + 1;
         };
@@ -79,24 +102,14 @@ module ramstack::box_muller {
         (first_part, second_part)
     }
 
-    // #[test]
-    // public fun test_uniform_to_normal() {
-    //     let random_numbers = vector[1,2,3,4,5,6,7,8,9];
-    //     let (first_part, second_part) = uniform_to_normal(random_numbers, 10);
-
-    //     debug::print(&first_part);
-    //     debug::print(&second_part);
-
-    // }
-
-    #[test]
-    public fun test_nomalize_u1_u2() {
-        let u1 = 1;
-        let u2 = 5;
-        let range = 10;
-        let (value1, value2): (FixedPoint64WithSign, FixedPoint64WithSign) = normalize_u1_u2(u1, u2, range);
-        debug::print(&value1);
-        debug::print(&value2);
+    #[test(fx = @aptos_framework)]
+    public fun test_nomalize_u1_u2(fx: signer) {
+        enable_cryptography_algebra_natives(&fx);
+        randomness::initialize_for_testing(&fx);
+        let numbers = randomness::permutation(20);
+        let (first_part, second_part) = uniform_to_normal(numbers, 20);
+        debug::print(&first_part);
+        debug::print(&second_part);
     }
 
 
