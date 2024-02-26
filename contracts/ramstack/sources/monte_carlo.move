@@ -172,14 +172,11 @@ module ramstack::monte_carlo {
             sign_nudt,
             sign_mul_result
         );
-        debug::print(&sign_add_result);
         let exp = math_fixed64::exp(
                 fixed_point64::create_from_raw_value(
                     fixed_point64_with_sign::get_raw_value(sign_add_result)
                 )
         );
-
-        debug::print(&exp);
 
         if (!fixed_point64_with_sign::is_positive(sign_add_result)) {
             exp = math_fixed64::mul_div(
