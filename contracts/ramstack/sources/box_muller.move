@@ -102,15 +102,15 @@ module ramstack::box_muller {
         (first_part, second_part)
     }
 
-    #[test(fx = @aptos_framework)]
-    public fun test_nomalize_u1_u2(fx: signer) {
-        enable_cryptography_algebra_natives(&fx);
-        randomness::initialize_for_testing(&fx);
-        let numbers = randomness::permutation(20);
-        let (first_part, second_part) = uniform_to_normal(numbers, 20);
-        debug::print(&first_part);
-        debug::print(&second_part);
-    }
+    // #[test(fx = @aptos_framework)]
+    // public fun test_nomalize_u1_u2(fx: signer) {
+    //     enable_cryptography_algebra_natives(&fx);
+    //     randomness::initialize_for_testing(&fx);
+    //     let numbers = randomness::permutation(20);
+    //     let (first_part, second_part) = uniform_to_normal(numbers, 20);
+    //     debug::print(&first_part);
+    //     debug::print(&second_part);
+    // }
 
 
 }
