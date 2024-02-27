@@ -4,13 +4,16 @@ module ramstack::monte_carlo {
     use aptos_std::math_fixed64;
     use aptos_std::math128;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
-
+    use ramstack::box_muller;
+    use aptos_framework::randomness;
     // #[test_only]
     use std::debug;
+    #[test_only]
+    use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
 
     // s0, r, sigma, t: need to move 64 bit to left ( << 64) from the client side
     // nsteps, nrep: keep original values in u128.
-    public fun mc_assets(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64): vector<vector<u128>> {
+    fun generate_spath(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, random_numbers: vector<FixedPoint64WithSign>): vector<vector<u128>> {
        
         // init two dimension vector or a table
         // init first column with s0
@@ -106,12 +109,6 @@ module ramstack::monte_carlo {
             fixed_point64::create_from_raw_value(1 << 64)
         );
 
-        // Randomness here -- need to generate nsteps * nrep times.
-
-        // convert to normal distribution
-
-        // calculate spath
-
         let i = 0;
 
         while(i < nrep) {
@@ -121,7 +118,7 @@ module ramstack::monte_carlo {
                 let col_j = vector::borrow(row_i, j);
                 let col_j_plus_1_fixed_point64 = math_fixed64::mul_div(
                     fixed_point64::create_from_raw_value(*col_j),
-                    calculate_exp(sign_nudt, sidt, fixed_point64_with_sign::create_from_raw_value((1 << 64) / 100, false)),
+                    calculate_exp(sign_nudt, sidt, *vector::borrow(&random_numbers, (i+1)*(j+1) - 1)),
                     fixed_point64::create_from_raw_value(1 << 64)
                 );
                 *vector::borrow_mut(row_i, j + 1) = fixed_point64::get_raw_value(col_j_plus_1_fixed_point64);
@@ -132,6 +129,17 @@ module ramstack::monte_carlo {
 
         spath
 
+    }
+
+    public fun generate_spath_with_permution(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64):vector<vector<u128>> {
+            let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_permutation(nrep, nsteps);
+            generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
+    }
+
+
+    public fun generate_spath_with_range(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, max_excl: u64):vector<vector<u128>> {
+            let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_u64_range(nrep, nsteps, max_excl);
+            generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
     }
 
     fun calculate_exp(sign_nudt: FixedPoint64WithSign, sidt: FixedPoint64, random_number: FixedPoint64WithSign): FixedPoint64  {
@@ -163,15 +171,11 @@ module ramstack::monte_carlo {
             );
         };
 
-        let sign_add_result = fixed_point64_with_sign::create_from_raw_value(
-            0,
-            false
-        );
-
         let sign_add_result = fixed_point64_with_sign::add(
             sign_nudt,
             sign_mul_result
         );
+
         let exp = math_fixed64::exp(
                 fixed_point64::create_from_raw_value(
                     fixed_point64_with_sign::get_raw_value(sign_add_result)
@@ -185,7 +189,6 @@ module ramstack::monte_carlo {
                 exp
             )
         };
-
         exp
     }
 
@@ -214,33 +217,82 @@ module ramstack::monte_carlo {
 
     }
 
+    fun generate_random_using_permutation(nrep: u64, nsteps: u64): vector<FixedPoint64WithSign> {
+        let range = nrep * nsteps + 1;
+        let uniform_random_numbers = randomness::permutation(range);
+        let (_, index_of_zero) = vector::index_of<u64>(&uniform_random_numbers, &(0));
+        vector::remove(&mut uniform_random_numbers, index_of_zero);
+        let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (range as u128));
+        let i = 0;
+        // let length = vector::length(&random_numbers);
+        // // Normalize to [0,1]
+        // while(i < length) {
+        //     let current_value = *vector::borrow(&random_numbers, i);
+        //     *vector::borrow_mut(&mut random_numbers, i) = fixed_point64_with_sign::div_u128(current_value, (range as u128));
+        //     i = i + 1;
+        // };
 
-    #[test]
-    public fun test_init_2d_vector() {
-        let spath = init_2d_vector(10, 15, 1);
-
-        debug::print(&spath);
+        random_numbers
     }
 
-    #[test]
-    public fun test_mc_assets() {
-        // S0 = 100
-        // K = 110
-        // CallOrPut = 'call'
-        // r = 0.03
-        // sigma = 0.25
-        // T = 0.5
-        // Nsteps = 10000
-        // Nrep = 1000
-        // SPATH = mc_asset(S0, r, sigma, T, Nsteps, Nrep)
+    fun generate_random_using_u64_range(nrep: u64, nsteps: u64, max_excl: u64): vector<FixedPoint64WithSign> {
+        let size = nrep * nsteps;
+        let i = 0;
+        let uniform_random_numbers = vector::empty<u64>();
+        while( i < size) {
+            let number = randomness::u64_range(1, max_excl);
+            vector::push_back(&mut uniform_random_numbers, number);
+            i = i + 1;
+        };
 
+        let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (max_excl as u128));
+        random_numbers
+    }
+
+    // #[test]
+    // public fun test_init_2d_vector() {
+    //     let spath = init_2d_vector(10, 15, 1);
+
+    //     debug::print(&spath);
+    // }
+
+    // #[test(fx = @aptos_framework)]
+    // public fun test_mc_assets_with_permutation(fx: signer) {
+    //     enable_cryptography_algebra_natives(&fx);
+    //     randomness::initialize_for_testing(&fx);
+    //     let s0 = 100 << 64;
+    //     let r = 553402322211286548;
+    //     let sigma = 4611686018427387904;
+    //     let t = 9223372036854775808;
+    //     let nsteps = 20;
+    //     let nrep = 10;
+    //     let spath = mc_assets(s0, r, sigma, t, nsteps, nrep);
+    //     debug::print(&spath);
+    // }
+
+    #[test(fx = @aptos_framework)]
+    public fun test_mc_assets_with_range(fx: signer) {
+        enable_cryptography_algebra_natives(&fx);
+        randomness::initialize_for_testing(&fx);
         let s0 = 100 << 64;
         let r = 553402322211286548;
         let sigma = 4611686018427387904;
         let t = 9223372036854775808;
-        let nsteps = 10;
-        let nrep = 5;
-        let spath = mc_assets(s0, r, sigma, t, nsteps, nrep);
+        let nsteps = 20;
+        let nrep = 10;
+        let spath = generate_spath_with_range(s0, r, sigma, t, nsteps, nrep, 50);
         debug::print(&spath);
     }
+
+    // #[test(fx = @aptos_framework)]
+    // public fun test_generate_normalized_numbers(fx: signer) {
+    //     enable_cryptography_algebra_natives(&fx);
+    //     randomness::initialize_for_testing(&fx);
+    //     let nsteps = 10;
+    //     let nrep = 10;
+
+    //     let nomalized_numbers: vector<FixedPoint64WithSign> = generate_random(nrep,nsteps);
+
+    //     debug::print(&nomalized_numbers);
+    // }
 }

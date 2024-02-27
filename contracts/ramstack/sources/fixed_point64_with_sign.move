@@ -2,7 +2,10 @@ module ramstack::fixed_point64_with_sign {
 
     const ERATIO_OUT_OF_RANGE: u64 = 131077;
     const MAX_U128: u256 = 340282366920938463463374607431768211455;
-    
+
+    use aptos_std::math_fixed64;
+    use aptos_std::fixed_point64::{Self, FixedPoint64};
+
     struct FixedPoint64WithSign has copy, drop {
         value: u128,
         positive: bool,
@@ -70,6 +73,18 @@ module ramstack::fixed_point64_with_sign {
         
         assert!(result <= MAX_U128, ERATIO_OUT_OF_RANGE);
         create_from_raw_value((result as u128), sign)
+    }
+
+    public fun div_u128(x: FixedPoint64WithSign, denominator: u128): FixedPoint64WithSign {
+        let result = math_fixed64::mul_div(
+            fixed_point64::create_from_raw_value(get_raw_value(x)),
+            fixed_point64::create_from_raw_value(1 << 64),
+            fixed_point64::create_from_raw_value(denominator << 64)
+        );
+        FixedPoint64WithSign {
+            value: fixed_point64::get_raw_value(result),
+            positive: is_positive(x)
+        }
     }
 
 }

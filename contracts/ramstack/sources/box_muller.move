@@ -16,7 +16,7 @@ module ramstack::box_muller {
     use ramstack::pi;
     const LN2: u128 = 12786308645202655660;
 
-    public fun uniform_to_normal(random_numbers: vector<u64>, range: u128): (vector<FixedPoint64WithSign>, vector<FixedPoint64WithSign>) {
+    public fun uniform_to_normal(random_numbers: vector<u64>, range: u128): vector<FixedPoint64WithSign> {
         let (first_part, second_part) = get_two_parts(random_numbers);
 
   
@@ -33,7 +33,8 @@ module ramstack::box_muller {
             i = i + 1;
         };
 
-        (nomalized_first_part, nomalized_second_part)
+        vector::append(&mut nomalized_first_part, nomalized_second_part);
+        nomalized_first_part
 
     }
 
@@ -107,9 +108,9 @@ module ramstack::box_muller {
     //     enable_cryptography_algebra_natives(&fx);
     //     randomness::initialize_for_testing(&fx);
     //     let numbers = randomness::permutation(20);
-    //     let (first_part, second_part) = uniform_to_normal(numbers, 20);
-    //     debug::print(&first_part);
-    //     debug::print(&second_part);
+    //     debug::print(&numbers);
+    //     let random_numbers = uniform_to_normal(numbers, 20);
+    //     debug::print(&random_numbers);
     // }
 
 
