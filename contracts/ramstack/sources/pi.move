@@ -6,9 +6,6 @@ module ramstack::pi {
     // The real value of PI is PI/2^64.
     const PI: u128 = 57952155664616944161;
 
-    #[test_only]
-    use std::debug;
-
     // Use Leibniz series
     // Easy to calculate but not accurate unless number of reps is very great.
     public fun leibniz_approx_pi(rep: u128): FixedPoint64 {
@@ -87,22 +84,6 @@ module ramstack::pi {
 
     public fun get_pi_const(): u128 {
         PI
-    }
-
-    #[test]
-    public fun test_leibniz_approx_pi() {
-        let pi: FixedPoint64 = leibniz_approx_pi(100);
-        // debug::print(&pi);
-        let xpi = fixed_point64::get_raw_value(pi) >> 63;
-        let round_pi = fixed_point64::round(pi);
-        // debug::print(&round_pi);
-        // debug::print(&xpi);
-    }
-
-    #[test]
-    public fun test_bbp_approx_pi() {
-        let pi: FixedPoint64 = bbp_approx_pi(10);
-        // debug::print(&pi);
     }
 
 }

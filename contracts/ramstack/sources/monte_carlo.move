@@ -2,14 +2,9 @@ module ramstack::monte_carlo {
     use std::vector;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     use aptos_std::math_fixed64;
-    use aptos_std::math128;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::box_muller;
     use aptos_framework::randomness;
-    // #[test_only]
-    use std::debug;
-    #[test_only]
-    use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
 
     // s0, r, sigma, t: need to move 64 bit to left ( << 64) from the client side
     // nsteps, nrep: keep original values in u128.
@@ -33,10 +28,8 @@ module ramstack::monte_carlo {
                     ),
                     fixed_point64::create_from_raw_value(1 << 64),
                 );
-        let sign_result = fixed_point64_with_sign::create_from_raw_value(
-            0,
-            false
-        );
+
+        let sign_result: FixedPoint64WithSign;
 
         if (r > fixed_point64::get_raw_value(second_param)) {
 
@@ -85,10 +78,7 @@ module ramstack::monte_carlo {
             fixed_point64::create_from_raw_value(1 << 64)
         );
 
-        let sign_nudt = fixed_point64_with_sign::create_from_raw_value(
-                0,
-                false
-        );
+        let sign_nudt: FixedPoint64WithSign;
 
         if (fixed_point64_with_sign::is_positive(sign_result)) {
             sign_nudt = fixed_point64_with_sign::create_from_raw_value(
@@ -145,10 +135,7 @@ module ramstack::monte_carlo {
     fun calculate_exp(sign_nudt: FixedPoint64WithSign, sidt: FixedPoint64, random_number: FixedPoint64WithSign): FixedPoint64  {
         
 
-        let sign_mul_result = fixed_point64_with_sign::create_from_raw_value(
-            0,
-            false
-        );
+        let sign_mul_result: FixedPoint64WithSign;
 
         let mul_result = math_fixed64::mul_div(
                 sidt,
@@ -223,7 +210,7 @@ module ramstack::monte_carlo {
         let (_, index_of_zero) = vector::index_of<u64>(&uniform_random_numbers, &(0));
         vector::remove(&mut uniform_random_numbers, index_of_zero);
         let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (range as u128));
-        let i = 0;
+        // let i = 0;
         // let length = vector::length(&random_numbers);
         // // Normalize to [0,1]
         // while(i < length) {
@@ -248,51 +235,4 @@ module ramstack::monte_carlo {
         let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (max_excl as u128));
         random_numbers
     }
-
-    // #[test]
-    // public fun test_init_2d_vector() {
-    //     let spath = init_2d_vector(10, 15, 1);
-
-    //     debug::print(&spath);
-    // }
-
-    // #[test(fx = @aptos_framework)]
-    // public fun test_mc_assets_with_permutation(fx: signer) {
-    //     enable_cryptography_algebra_natives(&fx);
-    //     randomness::initialize_for_testing(&fx);
-    //     let s0 = 100 << 64;
-    //     let r = 553402322211286548;
-    //     let sigma = 4611686018427387904;
-    //     let t = 9223372036854775808;
-    //     let nsteps = 20;
-    //     let nrep = 10;
-    //     let spath = mc_assets(s0, r, sigma, t, nsteps, nrep);
-    //     debug::print(&spath);
-    // }
-
-    #[test(fx = @aptos_framework)]
-    public fun test_mc_assets_with_range(fx: signer) {
-        enable_cryptography_algebra_natives(&fx);
-        randomness::initialize_for_testing(&fx);
-        let s0 = 100 << 64;
-        let r = 553402322211286548;
-        let sigma = 4611686018427387904;
-        let t = 9223372036854775808;
-        let nsteps = 20;
-        let nrep = 10;
-        let spath = generate_spath_with_range(s0, r, sigma, t, nsteps, nrep, 50);
-        debug::print(&spath);
-    }
-
-    // #[test(fx = @aptos_framework)]
-    // public fun test_generate_normalized_numbers(fx: signer) {
-    //     enable_cryptography_algebra_natives(&fx);
-    //     randomness::initialize_for_testing(&fx);
-    //     let nsteps = 10;
-    //     let nrep = 10;
-
-    //     let nomalized_numbers: vector<FixedPoint64WithSign> = generate_random(nrep,nsteps);
-
-    //     debug::print(&nomalized_numbers);
-    // }
 }

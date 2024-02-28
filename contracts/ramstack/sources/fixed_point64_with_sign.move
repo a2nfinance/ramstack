@@ -4,7 +4,7 @@ module ramstack::fixed_point64_with_sign {
     const MAX_U128: u256 = 340282366920938463463374607431768211455;
 
     use aptos_std::math_fixed64;
-    use aptos_std::fixed_point64::{Self, FixedPoint64};
+    use aptos_std::fixed_point64;
 
     struct FixedPoint64WithSign has copy, drop {
         value: u128,

@@ -3,13 +3,6 @@ module ramstack::box_muller {
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     use aptos_std::math_fixed64;
     use aptos_std::math128;
-    #[test_only]
-    use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
-    #[test_only]
-    use std::debug;
-    #[test_only]
-    use aptos_framework::randomness;
-
 
     use ramstack::cos_sin;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
@@ -102,16 +95,5 @@ module ramstack::box_muller {
 
         (first_part, second_part)
     }
-
-    // #[test(fx = @aptos_framework)]
-    // public fun test_nomalize_u1_u2(fx: signer) {
-    //     enable_cryptography_algebra_natives(&fx);
-    //     randomness::initialize_for_testing(&fx);
-    //     let numbers = randomness::permutation(20);
-    //     debug::print(&numbers);
-    //     let random_numbers = uniform_to_normal(numbers, 20);
-    //     debug::print(&random_numbers);
-    // }
-
 
 }

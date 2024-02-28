@@ -1,12 +1,9 @@
 module ramstack::cos_sin {
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     use aptos_std::math_fixed64;
-    use aptos_std::math128;
     use ramstack::pi;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
-    use std::debug;
     
-
     // use Maclaurin series
     // x: a variable is in radian.
     fun maclaurin_approx_cosx(x: FixedPoint64, rep: u64): FixedPoint64 {
@@ -120,23 +117,4 @@ module ramstack::cos_sin {
          
     }
 
-
-
-    // #[test]
-    // public fun test_maclaurin_approx_cosx() {
-    //     let pi_value = pi::get_pi_const();
-    //     // to radians
-    //     let radians = math128::mul_div(pi_value, 91, 180);
-    //     let approx_cosx: FixedPoint64WithSign = cosx(radians, 10);
-    //     debug::print(&approx_cosx);
-    // }
-
-    // #[test]
-    // public fun test_maclaurin_approx_sinx() {
-    //     let pi_value = pi::get_pi_const();
-    //     // to radians
-    //     let radians = math128::mul_div(pi_value, 45, 180);
-    //     let approx_sinx: FixedPoint64WithSign = sinx(radians, 10);
-    //     debug::print(&approx_sinx);
-    // }
 }
