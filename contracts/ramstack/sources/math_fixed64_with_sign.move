@@ -56,6 +56,34 @@ module ramstack::math_fixed64_with_sign {
         )
     }
 
+    public fun pow(x: FixedPoint64WithSign, y: u64): FixedPoint64WithSign {
+        let fixed_point64_number = math_fixed64::pow(
+            fixed_point64::create_from_raw_value(
+                fixed_point64_with_sign::get_raw_value(x)
+            ),
+            y
+        );
+        fixed_point64_with_sign::create_from_raw_value(
+            fixed_point64::get_raw_value(fixed_point64_number),
+            true
+        )
+    }
+    
+    public fun sqrt(x: FixedPoint64WithSign): FixedPoint64WithSign {
+        assert!(fixed_point64_with_sign::is_positive(x), ENEGATIVE);
+        
+        let fixed_point64_number = math_fixed64::sqrt(
+             fixed_point64::create_from_raw_value(
+                fixed_point64_with_sign::get_raw_value(x)
+            ),
+        );
+
+        fixed_point64_with_sign::create_from_raw_value(
+            fixed_point64::get_raw_value(fixed_point64_number),
+            true
+        )
+    }
+
     public fun ln(x: FixedPoint64WithSign): FixedPoint64WithSign{
         assert!(fixed_point64_with_sign::is_positive(x), ENEGATIVE);
         let ln_plus_32ln2: FixedPoint64 = math_fixed64::ln_plus_32ln2(
@@ -68,8 +96,8 @@ module ramstack::math_fixed64_with_sign {
                 true
             ),
             fixed_point64_with_sign::create_from_raw_value(
-                    64 * LN2,
-                    true
+                64 * LN2,
+                true
             )
                 
             
