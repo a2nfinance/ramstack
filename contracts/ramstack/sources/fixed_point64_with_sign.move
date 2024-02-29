@@ -2,14 +2,14 @@ module ramstack::fixed_point64_with_sign {
 
     const ERATIO_OUT_OF_RANGE: u64 = 131077;
     const MAX_U128: u256 = 340282366920938463463374607431768211455;
-
-    use aptos_std::math_fixed64;
-    use aptos_std::fixed_point64;
+    use aptos_std::fixed_point64::{Self, FixedPoint64};
 
     struct FixedPoint64WithSign has copy, drop {
         value: u128,
         positive: bool,
     }
+
+    use std::debug;
 
 
     public fun get_raw_value(x: FixedPoint64WithSign): u128 {
@@ -24,6 +24,14 @@ module ramstack::fixed_point64_with_sign {
         FixedPoint64WithSign {
             value,
             positive
+        }
+    }
+
+    public fun create_from_rational(number: u128, denominator: u128, positive: bool): FixedPoint64WithSign {
+        let fixed_point_number = fixed_point64::create_from_rational(number, denominator);
+        FixedPoint64WithSign {
+            value: fixed_point64::get_raw_value(fixed_point_number),
+            positive: positive
         }
     }
 
@@ -75,16 +83,33 @@ module ramstack::fixed_point64_with_sign {
         create_from_raw_value((result as u128), sign)
     }
 
-    public fun div_u128(x: FixedPoint64WithSign, denominator: u128): FixedPoint64WithSign {
-        let result = math_fixed64::mul_div(
-            fixed_point64::create_from_raw_value(get_raw_value(x)),
-            fixed_point64::create_from_raw_value(1 << 64),
-            fixed_point64::create_from_raw_value(denominator << 64)
-        );
+    public fun sub(x: FixedPoint64WithSign, y: FixedPoint64WithSign): FixedPoint64WithSign {
+        let revert_sign_y = revert_sign(y);
+        add(x, revert_sign_y)
+    }
+
+    public fun abs(x: FixedPoint64WithSign): FixedPoint64WithSign {
         FixedPoint64WithSign {
-            value: fixed_point64::get_raw_value(result),
-            positive: is_positive(x)
+            value: get_raw_value(x),
+            positive: true
         }
     }
 
+    public fun abs_u128(x: FixedPoint64WithSign): u128 {
+        get_raw_value(x)
+    }
+
+    public fun remove_sign(x: FixedPoint64WithSign): FixedPoint64 {
+        fixed_point64::create_from_raw_value(
+            get_raw_value(x)
+        )
+    }
+
+    // x = -1 * x
+    public fun revert_sign(x: FixedPoint64WithSign): FixedPoint64WithSign {
+        FixedPoint64WithSign {
+            value: get_raw_value(x),
+            positive: !(x.positive)
+        }
+    }
 }
