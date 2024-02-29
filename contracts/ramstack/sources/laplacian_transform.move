@@ -6,7 +6,6 @@ module ramstack::laplacian_transform {
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::math_fixed64_with_sign;
     const EGREATER_THAN_ONE: u64 = 0;
-    use std::debug;
     // mu: location parameter
     // beta: scale parameter
     // p: random number in [0,1] follow uniform distribution
@@ -22,7 +21,6 @@ module ramstack::laplacian_transform {
             ),
             fixed_point64_with_sign::create_from_rational(1,2, true)
         );
-        debug::print(&(p_sub));
         // 1 - 2* |p-0.5|
         // cause of p <=1  => 1 - 2 *|p-0.5| is always positive 
         let ln_param = fixed_point64_with_sign::sub(
@@ -33,16 +31,12 @@ module ramstack::laplacian_transform {
             )
         );
 
-        
-        debug::print(&ln_param);
         let correct_ln_with_sign = math_fixed64_with_sign::ln(ln_param);
 
         let sgn_p_sub = fixed_point64_with_sign::create_from_raw_value(
             1 << 64,
             fixed_point64_with_sign::is_positive(p_sub)
-        );
-        debug::print(&correct_ln_with_sign);    
-        debug::print(&sgn_p_sub);
+        ); 
 
         let mul_result = math_fixed64_with_sign::mul(correct_ln_with_sign, sgn_p_sub);
         mul_result = math_fixed64_with_sign::mul(

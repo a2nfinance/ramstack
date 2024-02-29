@@ -9,8 +9,6 @@ module ramstack::fixed_point64_with_sign {
         positive: bool,
     }
 
-    use std::debug;
-
 
     public fun get_raw_value(x: FixedPoint64WithSign): u128 {
         x.value
@@ -45,10 +43,9 @@ module ramstack::fixed_point64_with_sign {
         let y_raw = get_raw_value(y);
         let is_positive_x = is_positive(x);
         let is_positive_y = is_positive(y);
-
         let result = 0;
         let sign = false;
-        if (is_positive_x && is_positive_x) {
+        if (is_positive_x && is_positive_y) {
             result = (x_raw as u256) + (y_raw as u256);
             sign = true;
         } else {

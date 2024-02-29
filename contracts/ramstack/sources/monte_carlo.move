@@ -27,7 +27,7 @@ module ramstack::monte_carlo {
                         2
                     ),
                     fixed_point64::create_from_raw_value(1 << 64),
-                );
+        );
 
         let sign_result: FixedPoint64WithSign;
 
