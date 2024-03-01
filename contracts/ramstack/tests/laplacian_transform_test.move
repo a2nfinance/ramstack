@@ -1,7 +1,6 @@
 #[test_only]
 module ramstack::laplacian_transform_test {
     use ramstack::laplacian_transform;
-    use aptos_std::fixed_point64;
     use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
     use std::debug;
     use aptos_framework::randomness;
@@ -12,9 +11,9 @@ module ramstack::laplacian_transform_test {
         randomness::initialize_for_testing(&fx);
         let mu = 0; // 0 << 64 = 0
         let beta = 1 << 64;
-        let uniform_number = randomness::u64_range(1, 100);
-        let uniform_number_fixed64 = fixed_point64::create_from_rational((uniform_number as u128), 100);
-        let laplacian_number = laplacian_transform::uniform_to_laplacian(uniform_number_fixed64, mu, beta);
+        let range = 100;
+        let uniform_number = randomness::u64_range(1, range);
+        let laplacian_number = laplacian_transform::uniform_to_laplacian((uniform_number as u128), (range as u128), mu, beta);
         debug::print(&laplacian_number);
     }
 
@@ -30,9 +29,7 @@ module ramstack::laplacian_transform_test {
         while(i < loop_number) {
       
             let uniform_number = randomness::u64_range(0, range);
-      
-            let uniform_number_fixed64 = fixed_point64::create_from_rational((uniform_number as u128), (range as u128));
-            let laplacian_number = laplacian_transform::uniform_to_laplacian(uniform_number_fixed64, mu, beta);
+            let laplacian_number = laplacian_transform::uniform_to_laplacian((uniform_number as u128), (range as u128), mu, beta);
             debug::print(&uniform_number);
             debug::print(&laplacian_number);
             i = i + 1;
