@@ -3,7 +3,7 @@ module ramstack::exponential_transform_test {
     use aptos_std::crypto_algebra::enable_cryptography_algebra_natives;
     use std::debug;
     use aptos_framework::randomness;
-    use ramstack::exponential_tranform;
+    use ramstack::exponential_transform;
     use aptos_std::fixed_point64;
 
     #[test(fx = @aptos_framework)]
@@ -14,7 +14,7 @@ module ramstack::exponential_transform_test {
         let number = randomness::u64_range(0,range);
         debug::print(&number);
         let lambda = fixed_point64::create_from_rational(1, 2);
-        let random_number = exponential_tranform::uniform_to_exponential((number as u128), (range as u128), lambda);
+        let random_number = exponential_transform::uniform_to_exponential((number as u128), (range as u128), lambda);
         debug::print(&random_number);
     }
 
@@ -27,7 +27,7 @@ module ramstack::exponential_transform_test {
         let i = 0;
         while(i < 20) {
             let number = randomness::u64_range(0,range);
-            let random_number = exponential_tranform::uniform_to_exponential((number as u128), (range as u128), lambda);
+            let random_number = exponential_transform::uniform_to_exponential((number as u128), (range as u128), lambda);
             debug::print(&random_number);
             i = i + 1;
         };
