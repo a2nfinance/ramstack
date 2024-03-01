@@ -3,6 +3,7 @@
 // Invert F(x) = mu - beta * sgn(p-0.5) * ln(1 - 2*|p-0.5|); 
 module ramstack::laplacian_transform {
     use aptos_std::fixed_point64;
+    use std::debug;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::math_fixed64_with_sign;
     const EGREATER_THAN_RANGE: u64 = 0;
@@ -30,7 +31,9 @@ module ramstack::laplacian_transform {
                 fixed_point64_with_sign::abs(p_sub)
             )
         );
-
+        debug::print(&random_number);
+        debug::print(&p);
+        debug::print(&ln_param);
         let correct_ln_with_sign = math_fixed64_with_sign::ln(ln_param);
 
         let sgn_p_sub = fixed_point64_with_sign::create_from_raw_value(

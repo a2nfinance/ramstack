@@ -1,9 +1,9 @@
-module ramstack::exponential_tranform {
+module ramstack::exponential_transform {
     use aptos_std::math_fixed64;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     const LN2: u128 = 12786308645202655660;
     const EGREATER_THAN_RANGE: u64 = 0;
-    // number: a random number following uniform distribution
+    // number: a random number following the uniform distribution
     public fun uniform_to_exponential(random_number: u128, range: u128, lambda: FixedPoint64): FixedPoint64 {
         assert!(random_number < range, EGREATER_THAN_RANGE);
 

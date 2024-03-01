@@ -67,7 +67,7 @@ module ramstack::monte_carlo {
 
     }
 
-    public fun generate_spath_with_permution(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64):vector<vector<u128>> {
+    public fun generate_spath_with_permutation(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64): vector<vector<u128>> {
             let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_permutation(nrep, nsteps);
             generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
     }
@@ -111,7 +111,7 @@ module ramstack::monte_carlo {
         )
     }
 
-    fun init_2d_vector(step: u64, rep: u64, first_column_value: u128): vector<vector<u128>> {
+    public fun init_2d_vector(step: u64, rep: u64, first_column_value: u128): vector<vector<u128>> {
         let spath = vector::empty<vector<u128>>();
         let i = 0;
         while (i < rep) {

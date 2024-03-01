@@ -31,6 +31,7 @@ module ramstack::box_muller {
 
     }
 
+    // u1 must be greater than zero.
     public fun normalize_u1_u2(u1: u128, u2: u128, range: u128): (FixedPoint64WithSign, FixedPoint64WithSign) {
         // nomalize u1/range, u2/range to achieve uniform distribution in [0,1]
         let pi_value = pi::get_pi_const();
