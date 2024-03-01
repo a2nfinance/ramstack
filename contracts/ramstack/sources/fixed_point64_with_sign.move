@@ -109,4 +109,11 @@ module ramstack::fixed_point64_with_sign {
             positive: !(x.positive)
         }
     }
+
+    public fun is_equal(x: FixedPoint64WithSign, y: FixedPoint64WithSign): bool {
+        if (x.value == y.value && x.positive == y.positive) {
+            return true
+        };
+        false
+    }
 }

@@ -142,15 +142,6 @@ module ramstack::monte_carlo {
         let (_, index_of_zero) = vector::index_of<u64>(&uniform_random_numbers, &(0));
         vector::remove(&mut uniform_random_numbers, index_of_zero);
         let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (range as u128));
-        // let i = 0;
-        // let length = vector::length(&random_numbers);
-        // // Normalize to [0,1]
-        // while(i < length) {
-        //     let current_value = *vector::borrow(&random_numbers, i);
-        //     *vector::borrow_mut(&mut random_numbers, i) = fixed_point64_with_sign::div_u128(current_value, (range as u128));
-        //     i = i + 1;
-        // };
-
         random_numbers
     }
 

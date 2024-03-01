@@ -2,16 +2,20 @@ module ramstack::exponential_tranform {
     use aptos_std::math_fixed64;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     const LN2: u128 = 12786308645202655660;
+    const EGREATER_THAN_RANGE: u64 = 0;
     // number: a random number following uniform distribution
-    // number belongs to [0,1]
-    public fun uniform_to_exponential(number: FixedPoint64, lambda: FixedPoint64): FixedPoint64 {
-        // x = - (1/lambda) * ln(1-F(x))
+    public fun uniform_to_exponential(random_number: u128, range: u128, lambda: FixedPoint64): FixedPoint64 {
+        assert!(random_number < range, EGREATER_THAN_RANGE);
 
+        // [0,1)
+        let normalized_number = fixed_point64::create_from_rational(random_number, range);
+
+        // x = - (1/lambda) * ln(1-F(x))
         // ln(1 - F(x))
         let ln_plus_32ln2 = math_fixed64::ln_plus_32ln2(
             fixed_point64::sub(
                 fixed_point64::create_from_raw_value(1 << 64),
-                number
+                normalized_number
             )
         );
 

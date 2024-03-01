@@ -2,18 +2,18 @@
 // F(x) follows a uniform distribution
 // Invert F(x) = mu - beta * sgn(p-0.5) * ln(1 - 2*|p-0.5|); 
 module ramstack::laplacian_transform {
-    use aptos_std::fixed_point64::{Self, FixedPoint64};
+    use aptos_std::fixed_point64;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::math_fixed64_with_sign;
-    const EGREATER_THAN_ONE: u64 = 0;
+    const EGREATER_THAN_RANGE: u64 = 0;
     // mu: location parameter
     // beta: scale parameter
-    // p: random number in [0,1] follow uniform distribution
     // beta and mu must be converted to 64 bits left from real values.
-    public fun uniform_to_laplacian(p: FixedPoint64, mu: u128, beta: u128): FixedPoint64WithSign {
+    public fun uniform_to_laplacian(random_number: u128, range: u128, mu: u128, beta: u128): FixedPoint64WithSign {
 
-        assert!(fixed_point64::get_raw_value(p) <= (1 <<64), EGREATER_THAN_ONE);
-
+        assert!(random_number < range, EGREATER_THAN_RANGE);
+        // [0,1)
+        let p = fixed_point64::create_from_rational(random_number, range);
         let p_sub = fixed_point64_with_sign::sub(
             fixed_point64_with_sign::create_from_raw_value(
                 fixed_point64::get_raw_value(p),
