@@ -4,19 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 
 export const actionNames = {
-    loadDAODetailAction: "loadDAODetailAction",
-    createDAOAction: "createDAOAction",
-    fundDAOAction: "fundDAOAction",
-    addContributorAction: "addContributorAction",
-    removeContributorAction: "removeContributorAction",
-    createProgramAction: "createProgramAction",
-    newProposalAction: "newProposalAction",
-    votingAction: "votingAction",
-    executeAction: "executeAction",
-    addMemberAction: "addMemberAction",
-    removeMemberAction: "removeMemberAction",
-    addStepMemberAction: "addStepMemberAction",
-    removeStepMemberAction: "removeStepMemberAction",
+    getRandomNumber: "getRandomNumber",
 }
 
 
@@ -25,19 +13,7 @@ type Processes = {
 }
 
 const initialState: Processes = {
-    loadDAODetailAction: true,
-    createDAOAction: false,
-    fundDAOAction: false,
-    addContributorAction: false,
-    removeContributorAction: false,
-    createProgramAction: false,
-    newProposalAction: false,
-    votingAction: false,
-    executeAction: false,
-    addMemberAction: false,
-    addStepMemberAction: false,
-    removeMemberAction: false,
-    removeStepMemberAction: false
+    getRandomNumber: true,
 }
 
 export const processesSlice = createSlice({
