@@ -14,7 +14,7 @@ module ramstack::box_muller_test {
         let numbers = randomness::permutation(20);
         debug::print(&numbers);
         let random_numbers = box_muller::uniform_to_normal(numbers, 20);
-        // debug::print(&random_numbers);
+        debug::print(&random_numbers);
     }
 
     #[test(fx = @aptos_framework)]

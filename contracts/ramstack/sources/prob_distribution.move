@@ -21,7 +21,8 @@ module ramstack::prob_distribution {
         let i = 0 ;
 
         while( i < size ) {
-            let random_number = randomness::u64_range(min_incl, max_excl);
+           
+            let random_number = randomness::u64_range(min_incl + 1, max_excl);
             random_number = random_number - min_incl;
             vector::push_back(&mut random_numbers, random_number);
             i = i + 1;
@@ -67,12 +68,10 @@ module ramstack::prob_distribution {
 
         while( i < size ) {
             
-            let random_number = randomness::u64_range(min_incl, max_excl);
+            let random_number = randomness::u64_range(min_incl + 1, max_excl);
             random_number = random_number - min_incl;
-            if (random_number != 0) {
-                let ll_random_number = laplacian_transform::uniform_to_laplacian((random_number as u128), (range as u128), mu, beta);
-                vector::push_back(&mut random_numbers, ll_random_number);
-            };
+            let ll_random_number = laplacian_transform::uniform_to_laplacian((random_number as u128), (range as u128), mu, beta);
+            vector::push_back(&mut random_numbers, ll_random_number);
             i = i + 1;
         };
         random_numbers
@@ -91,7 +90,7 @@ module ramstack::prob_distribution {
         let i = 0 ;
 
         while( i < size ) {
-            let random_number = randomness::u64_range(min_incl, max_excl);
+            let random_number = randomness::u64_range(min_incl + 1, max_excl);
             random_number = random_number - min_incl;
             vector::push_back(&mut random_numbers, random_number);
             i = i + 1;
