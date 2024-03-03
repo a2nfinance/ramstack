@@ -7,9 +7,9 @@ export default function Index() {
     return (
         <>  
             <Head>
-                <title>Ramstack homepage</title>
+                <title>Price simulation</title>
             </Head>
-            
+            <Multiline />
         </>
     )
 }

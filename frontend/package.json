@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@aptos-labs/ts-sdk": "^1.7.0",
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.12.8",
     "dotenv": "^16.0.3",
@@ -21,7 +22,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-redux": "^9.0.4",
-    "@aptos-labs/ts-sdk": "^1.7.0"
+    "recharts": "^2.12.2"
   },
   "devDependencies": {
     "@types/node": "^20",

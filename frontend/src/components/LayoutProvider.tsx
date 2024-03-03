@@ -113,7 +113,7 @@ export const LayoutProvider = (props: Props) => {
                         padding: 16,
                         boxSizing: "border-box",
                         // background: colorBgContainer,
-                        maxWidth: 1440,
+                        width: "100%",
                         marginRight: "auto",
                         marginLeft: "auto"
                     }}

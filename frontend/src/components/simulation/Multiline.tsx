@@ -156,8 +156,6 @@ for (let i = 0; i < nsteps + 1; i++) {
     data.push(colData);
 }
 
-console.log(data);
-
 export const Multiline = () => {
     return (<ResponsiveContainer style={{display: "block"}}>
         <LineChart

@@ -814,20 +814,25 @@ let x: {value: number, positive: boolean}[] = [
 let min = Math.min(...mockData);
 let max = Math.max(...mockData);
 let range = 0.2;
-let steps = Math.floor((max - min) / range);
+let steps = Math.floor((max - min) / range) + 1;
+
 console.log(min);
 console.log(max);
 console.log(steps);
-let data: {range: string, count: number}[] = [];
+let data: {point: string, count: number}[] = [];
 
 for (let j=0; j < steps; j++) {
+    let point = min + range*j;
+    point += range / 2
     data.push(
         {
-            range: (min + range*j).toFixed(2),
+            point: point.toFixed(2),
             count: 0
         }
     )
 }
+
+console.log(data);
 
 for (let i = 0; i < mockData.length; i++) {
     for(let j = 0; j < steps; j++) {
@@ -837,7 +842,7 @@ for (let i = 0; i < mockData.length; i++) {
     }
 }
 
-export const RandomBar = () => {
+export const Standard = () => {
     let random1 = Math.floor(Math.random() * 255);
     let random2 = Math.floor(Math.random() * 255);
     let random3 = Math.floor(Math.random() * 255);
@@ -854,7 +859,7 @@ export const RandomBar = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="range" />
+          <XAxis dataKey="point" />
           <YAxis />
           <Tooltip />
           <Legend />
