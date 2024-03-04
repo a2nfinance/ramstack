@@ -6,7 +6,8 @@ module ramstack::pi {
     // The real value of PI is PI/2^64.
     const PI: u128 = 57952155664616944161;
 
-    // Use Leibniz series
+    // Use Leibniz series:
+    // PI = 4 * sum( sgn(-1**n) / (2*n +1) )
     // Easy to calculate but not accurate unless number of reps is very great.
     public fun leibniz_approx_pi(rep: u128): FixedPoint64 {
         let i = 1;
@@ -24,8 +25,10 @@ module ramstack::pi {
         multiply(return_value, 4)
     }
 
-    // Bailey_Borwein_Plouffe formula.
-    // This is a complex formula but it's very accurate and faster than Leibniz
+    // Bailey_Borwein_Plouffe formula:
+    // PI = sum( (1/16**k) * sum( 4 / (8k + 1) - 2 / (8k + 4) - 1 / (8k + 5) - 1 / (8k + 6) ) )
+    // k is number of replicate to approximate PI
+    // This is a complex formula but it's very accurate and faster than Leibniz.
     public fun bbp_approx_pi(rep: u128): FixedPoint64 {
         let i = 1;
         let return_value: FixedPoint64 = fixed_point64::sub(

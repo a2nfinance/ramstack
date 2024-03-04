@@ -1,3 +1,18 @@
+// The concept of Monte Carlo simulation is quite simple.
+// It involves obtaining the return process of the asset and discretizing it, then using small time intervals to calculate the changes in asset prices.
+// For example, considering token prices, their returns follow a Geometric Brownian motion.
+// A discretized stochastic differential equation:
+//
+// dSt = mu * St * dt + sigma * St * dWt
+//
+// where Wt represents a Wiener process.
+// After applying Itô’s formula, we obtain Equation 2 as the main equation for Monte Carlo simulation to predict token prices
+// Where Zt follows a standard normal distribution.
+//
+// St = S(t-1) * exp( (mu - 0.5 * sigma**2) * dt + sigma * sqrt(dt) * Zt )
+//
+// We need to tranform all random numbers of uniform distribution to random numbers of normal distribution to get Zt.
+// Box-muller method supports that.
 module ramstack::monte_carlo {
     use std::vector;
     use aptos_std::fixed_point64;
@@ -7,21 +22,24 @@ module ramstack::monte_carlo {
     use ramstack::box_muller;
     use aptos_framework::randomness;
 
-    // s0, r, sigma, t: need to move 64 bit to left ( << 64) from the client side
+    // s0: price value on Step 0.
+    // r: Asset`s historical return
+    // s0, r (mu), sigma, t: need to move 64 bit to left ( << 64) from the client side
     // nsteps, nrep: keep original values in u128.
     fun generate_spath(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, random_numbers: vector<FixedPoint64WithSign>): vector<vector<u128>> {
        
-        // init two dimension vector or a table
-        // init first column with s0
+        // initialize a two dimension vector.
+        // initialize the first column with s0.
         let spath = init_2d_vector(nsteps, nrep, s0);
         
+        // derivative(t)
         let dt = math_fixed64_with_sign::div(
             fixed_point64_with_sign::create_from_raw_value(t, true),
             fixed_point64_with_sign::create_from_raw_value((nsteps as u128) << 64, true),
         ); 
 
 
-
+        // Calculate 0.5 * sigma**2
         let second_param = math_fixed64_with_sign::mul(
             fixed_point64_with_sign::create_from_rational(1,2, true),
             math_fixed64_with_sign::pow(
@@ -29,18 +47,20 @@ module ramstack::monte_carlo {
                 2
             )
         );
-
+        
+        // Calculate r - 0.5 * sigma**2
         let sign_result: FixedPoint64WithSign = fixed_point64_with_sign::sub(
             fixed_point64_with_sign::create_from_raw_value(r, true),
             second_param
         );
 
+        // Calculate (r - 0.5 * sigma**2) * dt
         let sign_nudt: FixedPoint64WithSign = math_fixed64_with_sign::mul(
             sign_result,
             dt
         );
         
-
+        // Calculate sigma * sqrt(dt)
         let sidt: FixedPoint64WithSign = math_fixed64_with_sign::mul(
             fixed_point64_with_sign::create_from_raw_value(sigma, true),
             math_fixed64_with_sign::sqrt(dt),
@@ -53,6 +73,8 @@ module ramstack::monte_carlo {
             let row_i = vector::borrow_mut(&mut spath, i);
             while( j < nsteps) {
                 let col_j = vector::borrow(row_i, j);
+
+                // Calculate S(t-1) * exp( (mu - 0.5 * sigma**2) * dt + sigma * sqrt(dt) * Zt )
                 let col_j_plus_1_fixed_point64 = math_fixed64_with_sign::mul(
                     fixed_point64_with_sign::create_from_raw_value(*col_j, true),
                     calculate_exp(sign_nudt, sidt, *vector::borrow(&random_numbers, (i+1)*(j+1) - 1))
@@ -71,7 +93,6 @@ module ramstack::monte_carlo {
             let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_permutation(nrep, nsteps);
             generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
     }
-
 
     public fun generate_spath_with_range(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, max_excl: u64):vector<vector<u128>> {
             let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_u64_range(nrep, nsteps, max_excl);
@@ -150,6 +171,7 @@ module ramstack::monte_carlo {
         let i = 0;
         let uniform_random_numbers = vector::empty<u64>();
         while( i < size) {
+            // to ensure all random numbers belong to (0,1) after the standardization process.
             let number = randomness::u64_range(1, max_excl);
             vector::push_back(&mut uniform_random_numbers, number);
             i = i + 1;

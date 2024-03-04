@@ -1,3 +1,7 @@
+// Given two random numbers, U1 and U2, which belong to a uniform distribution in the range (0,1).
+// We can generate two random numbers following a normal distribution:
+// Z1 = sqrt(-2*ln(U1)) * cos(2*PI*U2)
+// Z2 = sqrt(-2*ln(U1)) * sin(2*PI*U2)
 module ramstack::box_muller {
     use std::vector;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
@@ -9,6 +13,8 @@ module ramstack::box_muller {
     use ramstack::pi;
     const LN2: u128 = 12786308645202655660;
 
+    // random_numbers: a vector of u64 random numbers within the specified range.
+    // range: counts from 0, for example: (0,20)
     public fun uniform_to_normal(random_numbers: vector<u64>, range: u128): vector<FixedPoint64WithSign> {
         let (first_part, second_part) = get_two_parts(random_numbers);
 
@@ -31,9 +37,10 @@ module ramstack::box_muller {
 
     }
 
-    // u1 must be greater than zero.
+    // u1 and u2 belong to (0, range)
+    // returns z0 and z1 of normal distribution, these are two signed numbers.
     public fun normalize_u1_u2(u1: u128, u2: u128, range: u128): (FixedPoint64WithSign, FixedPoint64WithSign) {
-        // nomalize u1/range, u2/range to achieve uniform distribution in [0,1]
+    
         let pi_value = pi::get_pi_const();
         let cos_u2 =  cos_sin::cosx(
             math128::mul_div(2 * pi_value, u2, range),
@@ -44,12 +51,17 @@ module ramstack::box_muller {
             math128::mul_div(2 * pi_value, u2, range),
             10
         );
-
+        // U1 need to be converted to (0,1): u1 = u1/range
+        // -2 * ln(u1) = ln(u1**(-2))= ln(1 / u1**2) = ln(range**2 / u1**2).
+        // This value is always positive because the standardlized u1 belongs to (0,1).
         let ln_u1 = math_fixed64::ln_plus_32ln2(
             fixed_point64::create_from_rational(range * range, u1 * u1)
         );
+        
         let multiply_64ln2 = 64 * LN2;
         let sqrt_u1: FixedPoint64 = math_fixed64::sqrt(
+                // ln(u1 << 64) = ln(u1) << 64 + 64*LN2
+                // ln(u1) << 64 = ln_plus_32ln2 - 64*LN2
                 fixed_point64::sub(ln_u1, fixed_point64::create_from_raw_value(multiply_64ln2))
         );
         let z0: FixedPoint64 = math_fixed64::mul_div(
@@ -77,7 +89,9 @@ module ramstack::box_muller {
         
     }
 
-
+    // Get two parts of random numbers:
+    // The first part is an array of U1
+    // The second part is an array of U2
     fun get_two_parts(random_numbers: vector<u64>): (vector<u128>, vector<u128>) {
         let n = vector::length(&random_numbers);
         let first_part = vector::empty<u128>();

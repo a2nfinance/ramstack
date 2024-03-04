@@ -4,11 +4,15 @@ module ramstack::cos_sin {
     use ramstack::pi;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     
-    // use Maclaurin series
-    // x: a variable is in radian.
+    // use Maclaurin series: 
+    // Cos(x) = Sum( (-1**n / (2n)!) * x**2n )
+    // n is number of replicate to approximate Cos(x)
+    // x: a variable in radians.
     fun maclaurin_approx_cosx(x: FixedPoint64, rep: u64): FixedPoint64 {
         let i = 1;
         let return_value: FixedPoint64 = fixed_point64::create_from_raw_value(1 << 64);
+
+        // This process can be improved using fixed_point64_with_sign and math_fixed64_with_sign.
         while( i < rep) {
             if (i % 2 == 0) {
                 let add_number: FixedPoint64 = math_fixed64::mul_div(
@@ -25,6 +29,7 @@ module ramstack::cos_sin {
             i = i + 1;
         };
 
+        // This process can be improved using fixed_point64_with_sign and math_fixed64_with_sign.
         let j = 1;
         while( j < rep) {
             if (j % 2 != 0) {
@@ -44,7 +49,7 @@ module ramstack::cos_sin {
         return_value
     }
 
-    // x belongs to 0 to 2*PI
+    // x belongs to (0, 2*PI)
     public fun cosx(x: u128, rep: u64): FixedPoint64WithSign {
         let pi_value = pi::get_pi_const();
         if ( x == pi_value/2 || x == 3 * pi_value / 2) {
@@ -88,6 +93,8 @@ module ramstack::cos_sin {
         
     }
 
+
+    // Calculate n!
     fun factorial(n: u64): u128 {
         let i = 0;
         let return_value = 1;
@@ -100,6 +107,7 @@ module ramstack::cos_sin {
 
     }
 
+    // Sin(x) = Cos(PI/2 - x)
     public fun sinx(x: u128, rep: u64): FixedPoint64WithSign {
          let pi_value = pi::get_pi_const();
          if (x == 0 || x == pi_value || x == 2 * pi_value) {

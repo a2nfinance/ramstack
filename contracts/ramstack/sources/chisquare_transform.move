@@ -4,7 +4,6 @@ module ramstack::chisquare_transform {
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     use aptos_std::math_fixed64;
     use std::vector;
-    use std::debug;
 
     public fun uniform_to_chisquare(uniform_numbers: vector<u64>, range: u128): vector<FixedPoint64> {
         let normalized_numbers:vector<FixedPoint64WithSign> = box_muller::uniform_to_normal(uniform_numbers, range);
