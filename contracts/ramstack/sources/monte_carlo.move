@@ -6,7 +6,7 @@
 // dSt = mu * St * dt + sigma * St * dWt
 //
 // where Wt represents a Wiener process.
-// After applying Itô’s formula, we obtain Equation 2 as the main equation for Monte Carlo simulation to predict token prices
+// After applying Ito's formula, we obtain Equation 2 as the main equation for Monte Carlo simulation to predict token prices
 // Where Zt follows a standard normal distribution.
 //
 // St = S(t-1) * exp( (mu - 0.5 * sigma**2) * dt + sigma * sqrt(dt) * Zt )
