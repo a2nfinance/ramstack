@@ -1,13 +1,13 @@
 [package]
 name = "ramstack"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["levi@a2n.finance"]
 
 [addresses]
 std = "0x1"
 aptos_std = "0x1"
 aptos_framework = "0x1"
-ramstack='081c76a712da7e9f93dece3c7eeab41ea8a0fe25c752d10e77f1aba77f51725b'
+ramstack='131af981c6ee5ee61c9440c5254f0448aef8e5cb8d2c321ff3024490c71eaaaa'
 
 [dev-addresses]
 
