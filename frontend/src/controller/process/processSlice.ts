@@ -4,7 +4,8 @@ import {
 } from "@reduxjs/toolkit";
 
 export const actionNames = {
-    getRandomNumber: "getRandomNumber",
+    getRandomNumberAction: "getRandomNumberAction",
+    simulatePriceAction: "simulatePriceAction"
 }
 
 
@@ -13,7 +14,8 @@ type Processes = {
 }
 
 const initialState: Processes = {
-    getRandomNumber: true,
+    getRandomNumberAction: false,
+    simulatePriceAction: false
 }
 
 export const processesSlice = createSlice({
