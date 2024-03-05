@@ -1,15 +1,15 @@
 import {
-    AppstoreOutlined,
     GithubOutlined,
     HomeOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined
 } from '@ant-design/icons';
-import { SlOrganization } from "react-icons/sl";
 import { Button, Form, Image, Layout, Menu, Space, theme } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useState } from "react";
 import { FaSuperscript } from "react-icons/fa";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import { LiaRandomSolid  } from "react-icons/lia";
 const { Header, Sider, Content, Footer } = Layout;
 
 interface Props {
@@ -46,13 +46,13 @@ export const LayoutProvider = (props: Props) => {
                         },
                         {
                             key: '2',
-                            icon: <AppstoreOutlined />,
+                            icon: <GiPerspectiveDiceSixFacesRandom />,
                             label: "Random numbers",
                             onClick: () => router.push("/random-number")
                         },
                         {
                             key: '3',
-                            icon: <SlOrganization />,
+                            icon: <LiaRandomSolid />,
                             label: "Price simulation",
                             onClick: () => router.push("/price-simulation")
                         },
