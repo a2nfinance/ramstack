@@ -22,7 +22,7 @@ module ramstack::monte_carlo_test {
         let t = 9223372036854775808;
         let nsteps = 20;
         let nrep = 10;
-        let spath = monte_carlo::generate_spath_with_permutation(s0, r, sigma, t, nsteps, nrep);
+        let spath = monte_carlo::generate_spath_with_permutation(s0, r, sigma, t, nsteps, nrep, true);
         debug::print(&spath);
     }
 
@@ -36,7 +36,7 @@ module ramstack::monte_carlo_test {
         let t = 9223372036854775808;
         let nsteps = 20;
         let nrep = 10;
-        let spath = monte_carlo::generate_spath_with_range(s0, r, sigma, t, nsteps, nrep, 50);
+        let spath = monte_carlo::generate_spath_with_range(s0, r, sigma, t, nsteps, nrep, 50, false);
         debug::print(&spath);
     }
 }

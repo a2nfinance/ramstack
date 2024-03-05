@@ -26,7 +26,7 @@ module ramstack::monte_carlo {
     // r: Asset`s historical return
     // s0, r (mu), sigma, t: need to move 64 bit to left ( << 64) from the client side
     // nsteps, nrep: keep original values in u128.
-    fun generate_spath(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, random_numbers: vector<FixedPoint64WithSign>): vector<vector<u128>> {
+    fun generate_spath(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, is_positive_r: bool, random_numbers: vector<FixedPoint64WithSign>): vector<vector<u128>> {
        
         // initialize a two dimension vector.
         // initialize the first column with s0.
@@ -50,7 +50,7 @@ module ramstack::monte_carlo {
         
         // Calculate r - 0.5 * sigma**2
         let sign_result: FixedPoint64WithSign = fixed_point64_with_sign::sub(
-            fixed_point64_with_sign::create_from_raw_value(r, true),
+            fixed_point64_with_sign::create_from_raw_value(r, is_positive_r),
             second_param
         );
 
@@ -89,14 +89,14 @@ module ramstack::monte_carlo {
 
     }
 
-    public fun generate_spath_with_permutation(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64): vector<vector<u128>> {
+    public fun generate_spath_with_permutation(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, is_positive_r: bool): vector<vector<u128>> {
             let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_permutation(nrep, nsteps);
-            generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
+            generate_spath(s0, r, sigma, t, nsteps, nrep, is_positive_r, random_numbers)
     }
 
-    public fun generate_spath_with_range(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, max_excl: u64):vector<vector<u128>> {
+    public fun generate_spath_with_range(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, max_excl: u64, is_positive_r: bool):vector<vector<u128>> {
             let random_numbers: vector<FixedPoint64WithSign> = generate_random_using_u64_range(nrep, nsteps, max_excl);
-            generate_spath(s0, r, sigma, t, nsteps, nrep, random_numbers)
+            generate_spath(s0, r, sigma, t, nsteps, nrep, is_positive_r, random_numbers)
     }
 
     fun calculate_exp(sign_nudt: FixedPoint64WithSign, sidt: FixedPoint64WithSign, random_number: FixedPoint64WithSign): FixedPoint64WithSign  {

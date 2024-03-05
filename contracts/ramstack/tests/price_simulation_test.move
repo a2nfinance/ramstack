@@ -17,7 +17,7 @@ module ramstack::price_simulation_test {
         let t = 9223372036854775808;
         let nsteps = 10;
         let nrep = 4;
-        let spath = price_simulation::get_spath_without_excl(s0, r, sigma, t, nsteps, nrep);
+        let spath = price_simulation::get_spath_without_excl(s0, r, sigma, t, nsteps, nrep, true);
         assert!(vector::length(&spath) == 4, EINCORRECT_LEGTH);
     }
 
@@ -32,7 +32,7 @@ module ramstack::price_simulation_test {
         let nsteps = 20;
         let nrep = 10;
         let excl = 50;
-        let spath = price_simulation::get_spath_with_excl(s0, r, sigma, t, nsteps, nrep, excl);
+        let spath = price_simulation::get_spath_with_excl(s0, r, sigma, t, nsteps, nrep, excl, false);
         debug::print(&spath);
         assert!(vector::length(&spath) == 10, EINCORRECT_LEGTH);
     }
