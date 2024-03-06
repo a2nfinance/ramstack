@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from "react";
 import { FaSuperscript } from "react-icons/fa";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
-import { LiaRandomSolid  } from "react-icons/lia";
+import { LiaRandomSolid } from "react-icons/lia";
 const { Header, Sider, Content, Footer } = Layout;
 
 interface Props {
@@ -46,16 +46,38 @@ export const LayoutProvider = (props: Props) => {
                         },
                         {
                             key: '2',
-                            icon: <GiPerspectiveDiceSixFacesRandom />,
-                            label: "Random numbers",
-                            onClick: () => router.push("/random-number")
+                            icon: <LiaRandomSolid />,
+                            label: "Price simulation",
+                            onClick: () => router.push("/price-simulation"),
                         },
                         {
                             key: '3',
-                            icon: <LiaRandomSolid />,
-                            label: "Price simulation",
-                            onClick: () => router.push("/price-simulation")
+                            icon: <GiPerspectiveDiceSixFacesRandom />,
+                            label: "Random numbers",
+                            children: [
+                                {
+                                    key: '3.1',
+                                    label: 'Normal distribution',
+                                    onClick: () => router.push("/distribution/normal")
+                                },
+                                {
+                                    key: '3.2',
+                                    label: 'Laplacian distribution',
+                                    onClick: () => router.push("/distribution/laplacian")
+                                },
+                                {
+                                    key: '3.3',
+                                    label: 'Exponential distribution',
+                                    onClick: () => router.push("/distribution/exponential")
+                                },
+                                {
+                                    key: '3.4',
+                                    label: 'Chi-square distribution',
+                                    onClick: () => router.push("/distribution/chisquare")
+                                },
+                            ]
                         },
+
                         { type: "divider" },
                         {
                             key: "4",

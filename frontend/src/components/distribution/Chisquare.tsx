@@ -1,93 +1,52 @@
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Rectangle } from 'recharts';
-
-let x: number[] = [
-    0.5057794465608757,  0.00483074681128533,  0.07379222676455484,
-    0.2178273511891036,  0.04201164452902505,   0.4399516532010624,
-   0.07379222676455484,  0.10557280900008463,   0.4399516532010624,
-   0.28795209537177213, 0.010231062293495257,  0.07379222676455484,
-   0.03178058223552979,  0.07012474418266854,  0.16036086402000338,
-   0.07379222676455484,  0.11208811123047904,  0.28795209537177213,
-  0.016353435035313616,  0.07379222676455484,  0.37795699780075837,
-  0.023421195670155187,  0.03311043121768503,  0.04201164452902505,
-    0.5057794465608757,  0.10557280900008463,  0.11196913295505162,
-   0.03178058223552979,   0.5780805231860222,  0.10554459118487189,
-   0.28795209537177213,   0.7236067977499793,  0.07012474418266854,
-   0.04201164452902505,  0.07379222676455484,  0.05520177790568498,
-  0.016353435035313616, 0.010231062293495257,  0.04201164452902505,
-   0.05520177790568498, 0.023414935583133338, 0.016353435035313616,
-   0.28795209537177213,  0.16053126329472858, 0.010231062293495257,
-   0.10557280900008463,  0.00483074681128533,   0.7236067977499793,
-  0.023421195670155187, 0.010231062293495257,   0.2669827845396982,
-   0.04575749056067512,   0.6989700043360189,  0.11498322671040753,
-    0.3979400086720376,                    0,   0.6989700043360189,
-                     1,                    0,   0.1519995578292907,
-   0.09691001300805642,   0.6989700043360189,   0.3010299956639812,
-  0.037016331118883174,  0.08473868199178307,   0.6989700043360189,
-  0.059167283790577806,   0.1519995578292907,  0.15490195998574316,
-    0.6989700043360189,  0.19972190870219061,  0.22184874961635637,
-   0.01747780615427544,   0.3979400086720376,   0.2669827845396982,
-                     1, 0.059167283790577806,   0.3010299956639812,
-                     0,                    1,   0.1519995578292907,
-   0.38196601125010576, 0.037016331118883174,   0.3979400086720376,
-    0.6989700043360189,   0.5228787452803375,  0.15490195998574316,
-   0.09691001300805642,   0.3979400086720376,   0.5228787452803375,
-   0.22184874961635637,  0.15490195998574316,   0.1519995578292907,
-   0.08473868199178307,  0.09691001300805642,                    1,
-   0.04575749056067512,  0.38196601125010576,  0.22184874961635637,
-   0.09691001300805642
-];
-
-
-let min = Math.min(...x);
-let max = Math.max(...x);
-let range = 0.1;
-let steps = Math.floor((max - min) / range) + 1;
-let data: {point: string, count: number}[] = [];
-
-for (let j=0; j < steps; j++) {
-    let point = min + range*j;
-    point += range / 2
-    data.push(
-        {
-            point: point.toFixed(2),
-            count: 0
-        }
-    )
-}
-
-for (let i = 0; i < x.length; i++) {
-    for(let j = 0; j < steps; j++) {
-        if (x[i] >= (min + j*range) && x[i] < (min + (j+1) * range)) {
-            data[j].count += 1;
-        }
-    }
-}
-
+import { useAppSelector } from '@/controller/hooks';
+import { getCQRandomNumber } from '@/core/prob_distribution';
+import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
+import { NumberChart } from './NumberChart';
+import { ShowNumbers } from './ShowNumbers';
 
 export const Chisquare = () => {
-    let random1 = Math.floor(Math.random() * 255);
-    let random2 = Math.floor(Math.random() * 255);
-    let random3 = Math.floor(Math.random() * 255);
-    let random_rgb = `rgb(${random1}, ${random2}, ${random3}, 0.8)`;
+    const { cqRandomNumbers, cqChartPoints } = useAppSelector(state => state.distribution);
+    const { getRandomNumberAction } = useAppSelector(state => state.process);
+    const onFinish = (values: any) => {
+        getCQRandomNumber(values)
+    }
     return (
-        <ResponsiveContainer>
-             <BarChart
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="point" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill={random_rgb} activeBar={<Rectangle fill="pink" stroke="blue" />} />
-        </BarChart>
-        </ResponsiveContainer>
+
+        <Row gutter={6}>
+            <Col span={6}>
+                <Card title="Random number settings">
+                    <Form
+                        initialValues={{
+                            size: 200,
+                            min_excl: 0,
+                            max_excl: 20
+                        }}
+                        onFinish={onFinish}
+                        layout='vertical'>
+
+                        <Form.Item label="Size" name={"size"}>
+                            <Input type='number' />
+                        </Form.Item>
+                        <Form.Item label="Min excl" name={"min_excl"}>
+                            <Input type='number' />
+                        </Form.Item>
+                        <Form.Item label="Max excl" name={"max_excl"}>
+                            <Input type='number' />
+                        </Form.Item>
+
+                        <Divider />
+                        <Button type='primary' block htmlType='submit' loading={getRandomNumberAction} size='large'>Generate numbers</Button>
+                    </Form>
+                </Card>
+            </Col>
+            <Col span={18}>
+                <NumberChart data={cqChartPoints} />
+            </Col>
+            <Divider />
+            <ShowNumbers title='Returned random numbers' data={cqRandomNumbers} />
+        </Row>
+
+
     );
 
 }

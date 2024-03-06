@@ -93,7 +93,7 @@ export const DataForm = () => {
                 </Card>
                 <Divider />
                 <Form.Item>
-                    <Button loading={simulatePriceAction} type="primary" block htmlType="submit">Simulate price</Button>
+                    <Button loading={simulatePriceAction}  size={"large"} type="primary" block htmlType="submit">Simulate price</Button>
                 </Form.Item>
             </Form>
         </Card>
