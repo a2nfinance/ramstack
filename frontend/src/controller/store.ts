@@ -2,13 +2,14 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 
 import processReducer from './process/processSlice';
 import simulationReducer from './simulation/simulationSlice';
-
+import distributionReducer from './distribution/distributionSlice';
 
 export function makeStore() {
     return configureStore({
         reducer: {
             process: processReducer,
-            simulation: simulationReducer
+            simulation: simulationReducer,
+            distribution: distributionReducer
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({

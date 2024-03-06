@@ -28,7 +28,7 @@ export const simulationSlice = createSlice({
             state.rep = action.payload.rep;
         },
         setSimulationProps: (state, action: PayloadAction<{key: string, value: any}>) => {
-            state["key"] = action.payload.value;
+            state[action.payload.key] = action.payload.value;
         },
     }
 })
