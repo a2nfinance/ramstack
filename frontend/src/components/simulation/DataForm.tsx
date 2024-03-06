@@ -25,7 +25,7 @@ export const DataForm = () => {
                 }}
                 onFinish={onFinish}
                 layout='vertical'>
-                <Card title="Historical data">
+                <Card title="Historical price data">
                     <Row gutter={12}>
                         <Col span={12}>
                             <Form.Item label="Token pair" name="pair" rules={[{ required: true, message: 'Missing token pair' }]}>

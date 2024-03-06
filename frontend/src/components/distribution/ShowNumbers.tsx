@@ -8,9 +8,9 @@ export const ShowNumbers = ({ title, data }: { title: string, data: any[] }) => 
             children: <>
                 <Flex gap="small" wrap="wrap">
                     {
-                        data.map(item => {
+                        data.map((item, index) => {
                             return (
-                                <Tag color="lime">{item.toString()}</Tag>
+                                <Tag key={`number-${index}`} color="lime">{item.toString()}</Tag>
                             )
                         })
                     }
