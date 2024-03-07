@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/controller/hooks';
 import { getNDRandomNumber } from '@/core/prob_distribution';
-import { Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
 import { NumberChart } from './NumberChart';
 import { ShowNumbers } from './ShowNumbers';
 
@@ -17,9 +17,9 @@ export const Standard = () => {
         <Card title="Random number settings">
           <Form
             initialValues={{
-              size: 200,
+              size: 300,
               min_excl: 0,
-              max_excl: 20
+              max_excl: 50
             }}
             onFinish={onFinish}
             layout='vertical'>
@@ -33,19 +33,20 @@ export const Standard = () => {
             <Form.Item label="Max excl" name={"max_excl"} rules={[{ required: true, message: 'Missing max excl' }]}>
               <InputNumber style={{ width: "100%" }} min={1} precision={0} />
             </Form.Item>
-
+            <Divider/>
+            <Alert type='info' showIcon message={"These are the settings to generate random numbers based on a uniform distribution. Afterward, the generated numbers will be converted to random numbers based on a normal distribution."} />
             <Divider />
-            <Button type='primary' block htmlType='submit' loading={getRandomNumberAction} size='large'>Generate numbers</Button>
+            <Button type='primary' block htmlType='submit' loading={getRandomNumberAction} size='large'>Generate & Convert</Button>
           </Form>
+         
         </Card>
-
       </Col>
       <Col span={18}>
         <NumberChart data={ndChartPoints} />
-
+        
       </Col>
       <Divider />
-      <ShowNumbers title='Returned random numbers' data={ndRandomNumbers} />
+      <ShowNumbers title='Converted numbers' data={ndRandomNumbers} />
     </Row>
 
 
