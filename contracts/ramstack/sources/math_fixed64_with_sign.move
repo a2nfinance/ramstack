@@ -3,9 +3,11 @@ module ramstack::math_fixed64_with_sign {
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use aptos_std::math_fixed64;
     use aptos_std::fixed_point64::{Self, FixedPoint64};
+    use std::vector;
 
     const EZERO_DENOMINATOR: u64 = 0;
     const ENEGATIVE: u64 = 1;
+    const EZEROLENGTH: u64 = 2;
     const LN2: u128 = 12786308645202655660;
 
     public fun div_u128(x: FixedPoint64WithSign, denominator: u128): FixedPoint64WithSign {
@@ -105,6 +107,106 @@ module ramstack::math_fixed64_with_sign {
 
         ln_with_sign
         
+    }
+
+    // Maximum
+    public fun maximum(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
+        // assert length here
+        assert!(vector::length(&numbers) > 0, EZEROLENGTH);
+        let maximum: &FixedPoint64WithSign = vector::borrow(&numbers, 0);
+        let i = 0;
+        while(i < vector::length(&numbers)) {
+            let number = vector::borrow(&numbers, i);
+            let sub_number = fixed_point64_with_sign::sub(*number, *maximum);
+            if (fixed_point64_with_sign::is_positive(sub_number)) {
+                maximum = number;
+            };
+            i = i + 1;
+        };
+
+        *maximum
+    }
+
+    // Minimum
+    public fun minimum(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
+        // assert length here
+        assert!(vector::length(&numbers) > 0, EZEROLENGTH);
+        let minimum: &FixedPoint64WithSign = vector::borrow(&numbers, 0);
+        let i = 0;
+        while(i < vector::length(&numbers)) {
+            let number = vector::borrow(&numbers, i);
+            let sub_number = fixed_point64_with_sign::sub(*minimum, *number);
+            if (fixed_point64_with_sign::is_positive(sub_number)) {
+                minimum = number;
+            };
+            i = i + 1;
+        };
+
+        *minimum
+    }
+    // Log2
+    public fun log2(number: FixedPoint64WithSign): FixedPoint64WithSign {
+        assert!(fixed_point64_with_sign::is_positive(number), ENEGATIVE);
+        let log2_plus_64: FixedPoint64 = math_fixed64::log2_plus_64(
+            fixed_point64_with_sign::remove_sign(number)
+        );
+
+        let log2_with_sign: FixedPoint64WithSign = fixed_point64_with_sign::sub(
+            fixed_point64_with_sign::create_from_raw_value(
+                fixed_point64::get_raw_value(log2_plus_64),
+                true
+            ),
+            fixed_point64_with_sign::create_from_raw_value(
+                64 << 64,
+                true
+            )
+                
+            
+        );
+
+        log2_with_sign
+    } 
+    // Mean
+    public fun mean(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
+        // assert length here
+        assert!(vector::length(&numbers) > 0, EZEROLENGTH);
+        let vector_length = vector::length(&numbers);
+        let sum = fixed_point64_with_sign::create_from_raw_value(
+            0,
+            false
+        );
+        let i = 0;
+        while(i < vector_length) {
+            let number = vector::borrow(&numbers, i);
+            sum = fixed_point64_with_sign::add(sum, *number);
+            i = i + 1;
+        };
+
+
+        div(
+            sum, 
+            fixed_point64_with_sign::create_from_raw_value(
+                (vector_length as u128) << 64,
+                true
+            )
+        )
+    }
+    // Exp
+    public fun exp(number: FixedPoint64WithSign): FixedPoint64WithSign {
+        let exp_number = math_fixed64::exp(
+            fixed_point64::create_from_raw_value(
+                fixed_point64_with_sign::get_raw_value(number)
+            )
+        );
+        let exp_result = fixed_point64_with_sign::create_from_raw_value(fixed_point64::get_raw_value(exp_number), true);
+        if (!fixed_point64_with_sign::is_positive(number)) {
+            exp_result = div(
+                fixed_point64_with_sign::create_from_raw_value(1<<64, true),
+                exp_result
+            );
+        };
+
+        exp_result
     }
 
 }
