@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/controller/hooks";
 import { whitelistedPairs } from "@/core/config";
 import { getPricePaths } from "@/core/price_simulation";
-import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
+import { Button, Card, Col, Divider, Form, Input, InputNumber, Row, Select } from "antd";
 
 export const DataForm = () => {
     const {simulatePriceAction} = useAppSelector(state => state.process);
@@ -34,7 +34,7 @@ export const DataForm = () => {
                         </Col>
                         <Col span={12}>
                             <Form.Item label={"Limit"} name={"limit"} rules={[{ required: true, message: 'Missing limit' }]}>
-                                <Input type="number" />
+                                <InputNumber style={{width: "100%"}} min={1} max={1000} precision={0} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -42,7 +42,7 @@ export const DataForm = () => {
                     <Row gutter={12}>
                         <Col span={12}>
                             <Form.Item label={"Interval"} name={"interval"} rules={[{ required: true, message: 'Missing token pair' }]}>
-                                <Input type="number" />
+                                <InputNumber style={{width: "100%"}} min={1} precision={0} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -88,7 +88,7 @@ export const DataForm = () => {
                         </Col>
                     </Row>
                     <Form.Item label={"Time to maturity"} name={"t"} rules={[{ required: true, message: 'Missing time to maturity' }]}>
-                        <Input type="number" />
+                        <InputNumber style={{width: "100%"}} min={1} precision={0} />
                     </Form.Item>
                 </Card>
                 <Divider />
