@@ -15,7 +15,7 @@ module ramstack::prob_distribution_test {
         let size = 100;
 
         let random_numbers = prob_distribution::get_nd_random_numbers(size, min_incl, max_excl);
-        // debug::print(&random_numbers);
+        debug::print(&random_numbers);
     }
 
     #[test(fx = @aptos_framework)]
@@ -27,7 +27,7 @@ module ramstack::prob_distribution_test {
         let size = 100;
         let lambda = 1 << 63; // 0.5 << 64 = 1<<63
         let random_numbers = prob_distribution::get_ed_random_numbers(size, min_incl, max_excl, lambda);
-        // debug::print(&random_numbers);
+        debug::print(&random_numbers);
     }
 
     #[test(fx = @aptos_framework)]
@@ -40,7 +40,7 @@ module ramstack::prob_distribution_test {
         let mu = 0; // 0 << 64 = 0
         let beta = 1 << 64;
         let random_numbers = prob_distribution::get_ll_random_numbers(size, min_incl, max_excl, mu, beta);
-        // debug::print(&random_numbers);
+        debug::print(&random_numbers);
     }
 
     #[test(fx = @aptos_framework)]
