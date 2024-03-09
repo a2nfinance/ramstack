@@ -1,4 +1,5 @@
 import { ChartPoint } from "@/controller/distribution/distributionSlice";
+import { TableColumnsType } from "antd";
 
 export const convertPathsData = (data: string[][], steps: number, rep: number) => {
     let paths: any[] = [];
@@ -14,7 +15,7 @@ export const convertPathsData = (data: string[][], steps: number, rep: number) =
         for (let j = 0; j < rep; j++) {
             let originValue = Number(BigInt(data[j][i])) / Number(BigInt(2 ** 64));
             floorValue = parseFloat(originValue.toFixed(3));
-            colData[`p${j}`] = floorValue;
+            colData[`P${j}`] = floorValue;
             if (floorValue < minValue) minValue = floorValue;
             if (floorValue > maxValue) maxValue = floorValue;
         }
@@ -129,4 +130,22 @@ export const convertCQNumbersToChartPoint = (numbers: { value: string }[], range
         cqRandomNumbers: expRandomNumbers,
         cqChartPoints: expChartPoints
     }
+}
+
+export const convertToDataSource = (paths, nrep) => {
+
+    let dataSource: any[] = [];
+
+    for (let i = 0; i < nrep; i++) {
+        let rowData = {
+            path: `P${i}`
+        };
+        for(let j = 0; j < paths.length; j++) {
+            rowData[`S${j}`] = paths[j][`P${i}`] 
+        }
+        dataSource.push(rowData)
+    }
+    return dataSource;
+
+
 }
