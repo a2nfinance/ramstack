@@ -17,7 +17,7 @@ export const Multiline = () => {
             
             return (
                 <div className="custom-tooltip" style={{ backgroundColor: "white", padding: "10px 15px" }}>
-                    <div className="label">{label}</div>
+                    <div className="label" style={{color: "#333333"}}>{label}</div>
                     <hr />
                     {
                         payload.map((pld) => {
