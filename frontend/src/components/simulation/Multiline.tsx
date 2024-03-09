@@ -24,7 +24,7 @@ export const Multiline = () => {
                             let rowIndex = parseInt(pld.dataKey.replace("P", ""));
                             let visible = visibleCells?.[rowIndex]?.[columnIndex];
                             if (visible) {
-                                return <p style={{ ...pld, visible: visible }
+                                return <p key={`${label}-${pld.dataKey}`} style={{ ...pld, visible: visible }
                                 } > {`${pld.dataKey} : ${pld.value}`}</p>
                             }
 
