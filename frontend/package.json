@@ -24,7 +24,8 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-redux": "^9.0.4",
-    "recharts": "^2.12.2"
+    "recharts": "^2.12.2",
+    "seedrandom": "^3.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",

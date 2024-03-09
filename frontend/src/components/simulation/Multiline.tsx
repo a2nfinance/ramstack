@@ -1,4 +1,5 @@
 import { useAppSelector } from '@/controller/hooks';
+import { getRandomColor } from '@/helper/random_color';
 import { Card, Col, Divider, Row } from 'antd';
 import { useEffect } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -57,10 +58,8 @@ export const Multiline = () => {
             <Legend />
             {
                 (new Array(rep).fill(0)).map((_, index) => {
-                    let random1 = Math.floor(Math.random() * 255);
-                    let random2 = Math.floor(Math.random() * 255);
-                    let random3 = Math.floor(Math.random() * 255);
-                    return <Line key={`path-${index}`} type="monotone" dataKey={`P${index}`} stroke={`rgb(${random1}, ${random2}, ${random3}, 0.8)`} activeDot={{ r: 8 }} />
+                    let color = getRandomColor(index);
+                    return <Line key={`path-${index}`} type="monotone" dataKey={`P${index}`} stroke={color} activeDot={{ r: 8 }} />
                 })
             }
         </LineChart>
