@@ -76,7 +76,7 @@ export const getTokenPriceHistory = async (symbol: string, interval: string, lim
         // set R
         store.dispatch(setSimulationProps({key: "r", value: meanDailyReturn}));
         return {
-            s0: BigInt((lastClosedPrice * 2 ** 64).toFixed(0)),
+            s0: BigInt(lastClosedPrice * 2 ** 64),
             r: BigInt((abs(meanDailyReturn) * 2 ** 64).toFixed(0)),
             sigma: BigInt((parseFloat(movingVolatility.toString()) * 2 ** 64).toFixed(0)),
             is_positive_r: (meanDailyReturn > 0)

@@ -1,17 +1,17 @@
-import { useAppSelector } from "@/controller/hooks"
+import { useAppSelector } from "@/controller/hooks";
 import { calculateOptionPrice } from "@/core/price_simulation";
 import { CopyOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Collapse, CollapseProps, Divider, Flex, Form, InputNumber, Row, Select, message } from "antd";
-import { useCallback, useState } from "react";
+import { Button, Card, Col, Divider, Form, InputNumber, Row, Select, message } from "antd";
+import { useState } from "react";
 
 export const OptionPricePrediction = () => {
     const [optionPrice, setOptionPrice] = useState(0);
     const { paths } = useAppSelector(state => state.simulation);
     const [messageApi, contextHolder] = message.useMessage();
-    const onFinish = useCallback((values: { call_or_put: "call" | "put", strike_price: number }) => {
+    const onFinish = (values: { call_or_put: "call" | "put", strike_price: number }) => {
         let calculatedOptionPrice = calculateOptionPrice(values);
         setOptionPrice(calculatedOptionPrice)
-    }, [optionPrice])
+    }
     return (
         <Card title={"Option price prediction"}>
              {contextHolder}
