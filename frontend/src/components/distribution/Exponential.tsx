@@ -1,11 +1,11 @@
 import { useAppSelector } from '@/controller/hooks';
 import { getEXPRandomNumber } from '@/core/prob_distribution';
-import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, InputNumber, Row } from 'antd';
 import { NumberChart } from './NumberChart';
 import { ShowNumbers } from './ShowNumbers';
 
 export const Exponential = () => {
-    const { expRandomNumbers, expChartPoints } = useAppSelector(state => state.distribution);
+    const { expChartPoints } = useAppSelector(state => state.distribution);
     const { getRandomNumberAction } = useAppSelector(state => state.process);
     const onFinish = (values: any) => {
         getEXPRandomNumber(values)
@@ -50,7 +50,7 @@ export const Exponential = () => {
                 <NumberChart data={expChartPoints} />
             </Col>
             <Divider />
-            <ShowNumbers title='Converted numbers' data={expRandomNumbers} />
+            <ShowNumbers title='Converted random numbers' data={expChartPoints} />
         </Row>
 
 

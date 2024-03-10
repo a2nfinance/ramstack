@@ -1,11 +1,11 @@
-import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
-import { NumberChart } from './NumberChart';
 import { useAppSelector } from '@/controller/hooks';
 import { getLLRandomNumber } from '@/core/prob_distribution';
+import { Alert, Button, Card, Col, Divider, Form, InputNumber, Row } from 'antd';
+import { NumberChart } from './NumberChart';
 import { ShowNumbers } from './ShowNumbers';
 
 export const Laplacian = () => {
-  const { llRandomNumbers, llChartPoints } = useAppSelector(state => state.distribution);
+  const { llChartPoints } = useAppSelector(state => state.distribution);
   const { getRandomNumberAction } = useAppSelector(state => state.process);
   const onFinish = (values: any) => {
     getLLRandomNumber(values)
@@ -59,7 +59,7 @@ export const Laplacian = () => {
         <NumberChart data={llChartPoints} />
       </Col>
       <Divider />
-      <ShowNumbers title='Converted numbers' data={llRandomNumbers} />
+      <ShowNumbers title='Converted random numbers' data={llChartPoints} />
     </Row>
 
 

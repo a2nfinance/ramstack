@@ -1,11 +1,11 @@
 import { useAppSelector } from '@/controller/hooks';
 import { getCQRandomNumber } from '@/core/prob_distribution';
-import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, InputNumber, Row } from 'antd';
 import { NumberChart } from './NumberChart';
 import { ShowNumbers } from './ShowNumbers';
 
 export const Chisquare = () => {
-    const { cqRandomNumbers, cqChartPoints } = useAppSelector(state => state.distribution);
+    const { cqChartPoints } = useAppSelector(state => state.distribution);
     const { getRandomNumberAction } = useAppSelector(state => state.process);
     const onFinish = (values: any) => {
         getCQRandomNumber(values)
@@ -44,7 +44,7 @@ export const Chisquare = () => {
                 <NumberChart data={cqChartPoints} />
             </Col>
             <Divider />
-            <ShowNumbers title='Converted numbers' data={cqRandomNumbers} />
+            <ShowNumbers title='Converted random numbers' data={cqChartPoints} />
         </Row>
 
 

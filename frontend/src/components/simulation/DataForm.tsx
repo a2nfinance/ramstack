@@ -102,8 +102,13 @@ export const DataForm = () => {
                 </Col>
                 <Col span={8}>
                     <Card style={{minHeight: 400}}>
-                        <Text>For example, if the limit number is 100, the interval is 1, and the type is hour, then the price data includes 100 price candles with an interval of 1 hour.</Text>
-                        <Text>For example, if the number of paths is 10, the number of steps is 20, and the duration is 10 hours, then the price chart will display 10 possible price paths, each with 20 price points, all within a 10-hour period.</Text>
+                        <Text>Historical price data is fetched from the Binance API, so it is always up to date. You can select one of the whitelisted token pairs. Price data will be pre-processed to obtain some statistical information before calling smart contracts that implement Monte Carlo algorithms.</Text>
+                        <br />
+                        <br />
+                        <Text>Price simulation settings define how many paths and steps are shown on the chart. You can hide paths or prices on each step by clicking on the cell in the data table.</Text>
+                         <br />
+                         <br />
+                        <Text>After the simulation, price data is shown on the chart. You can use this data to predict option prices for any strike price.</Text>
                         <Divider />
                         
                         <Form.Item>

@@ -45,14 +45,15 @@ export const convertNDNumbersToChartPoint = (numbers: { positive: boolean, value
     let min = Math.min(...convertedNumbers);
     let max = Math.max(...convertedNumbers);
     let steps = Math.floor((max - min) / range) + 1;
-
     for (let j = 0; j < steps; j++) {
         let point = min + range * j;
         point += range / 2
         chartPoints.push(
             {
                 point: point.toFixed(2),
-                count: 0
+                count: 0,
+                numbers: [],
+                range: range
             }
         )
     }
@@ -61,12 +62,12 @@ export const convertNDNumbersToChartPoint = (numbers: { positive: boolean, value
         for (let j = 0; j < steps; j++) {
             if (convertedNumbers[i] >= (min + j * range) && convertedNumbers[i] < (min + (j + 1) * range)) {
                 chartPoints[j].count += 1;
+                chartPoints[j].numbers.push(convertedNumbers[i]);
             }
         }
     }
 
     return {
-        ndRandomNumbers: convertedNumbers,
         ndChartPoints: chartPoints
     }
 }
@@ -75,10 +76,9 @@ export const convertNDNumbersToChartPoint = (numbers: { positive: boolean, value
 
 
 export const convertLLNumbersToChartPoint = (numbers: { positive: boolean, value: string }[], range: number) => {
-    const { ndRandomNumbers, ndChartPoints } = convertNDNumbersToChartPoint(numbers, range);
+    const { ndChartPoints } = convertNDNumbersToChartPoint(numbers, range);
 
     return {
-        llRandomNumbers: ndRandomNumbers,
         llChartPoints: ndChartPoints
     }
 }
@@ -102,7 +102,9 @@ export const convertExpNumbersToChartPoint = (numbers: { value: string }[], rang
         chartPoints.push(
             {
                 point: point.toFixed(2),
-                count: 0
+                count: 0,
+                numbers: [],
+                range: range
             }
         )
     }
@@ -111,22 +113,21 @@ export const convertExpNumbersToChartPoint = (numbers: { value: string }[], rang
         for (let j = 0; j < steps; j++) {
             if (convertedNumbers[i] >= (min + j * range) && convertedNumbers[i] < (min + (j + 1) * range)) {
                 chartPoints[j].count += 1;
+                chartPoints[j].numbers.push(convertedNumbers[i]);
             }
         }
     }
 
     return {
-        expRandomNumbers: convertedNumbers,
         expChartPoints: chartPoints
     }
 }
 
 
 export const convertCQNumbersToChartPoint = (numbers: { value: string }[], range: number) => {
-    const { expRandomNumbers, expChartPoints } = convertExpNumbersToChartPoint(numbers, range);
+    const { expChartPoints } = convertExpNumbersToChartPoint(numbers, range);
 
     return {
-        cqRandomNumbers: expRandomNumbers,
         cqChartPoints: expChartPoints
     }
 }
@@ -139,8 +140,8 @@ export const convertToDataSource = (paths, nrep) => {
         let rowData = {
             path: `P${i}`
         };
-        for(let j = 0; j < paths.length; j++) {
-            rowData[`S${j}`] = paths[j][`P${i}`] 
+        for (let j = 0; j < paths.length; j++) {
+            rowData[`S${j}`] = paths[j][`P${i}`]
         }
         dataSource.push(rowData)
     }

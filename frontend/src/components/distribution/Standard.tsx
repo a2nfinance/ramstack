@@ -1,11 +1,11 @@
 import { useAppSelector } from '@/controller/hooks';
 import { getNDRandomNumber } from '@/core/prob_distribution';
-import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, InputNumber, Row } from 'antd';
 import { NumberChart } from './NumberChart';
 import { ShowNumbers } from './ShowNumbers';
 
 export const Standard = () => {
-  const { ndRandomNumbers, ndChartPoints } = useAppSelector(state => state.distribution);
+  const { ndChartPoints } = useAppSelector(state => state.distribution);
   const { getRandomNumberAction } = useAppSelector(state => state.process);
   const onFinish = (values: any) => {
     getNDRandomNumber(values)
@@ -46,7 +46,7 @@ export const Standard = () => {
         
       </Col>
       <Divider />
-      <ShowNumbers title='Converted numbers' data={ndRandomNumbers} />
+      <ShowNumbers title='Converted random numbers' data={ndChartPoints} />
     </Row>
 
 

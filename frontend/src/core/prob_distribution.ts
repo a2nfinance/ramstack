@@ -17,8 +17,7 @@ export const getNDRandomNumber = async (values: {size: number, min_excl: number,
             functionArguments: [values.size.toString(), values.min_excl.toString(), values.max_excl.toString()],
         }
         let numbers: MoveValue = await aptos.view({ payload: payload });
-        const {ndRandomNumbers, ndChartPoints} = convertNDNumbersToChartPoint(numbers[0], 0.2);
-        store.dispatch(setProps({key: "ndRandomNumbers", value: ndRandomNumbers}));
+        const {ndChartPoints} = convertNDNumbersToChartPoint(numbers[0], 0.2);
         store.dispatch(setProps({key: "ndChartPoints", value: ndChartPoints}))
     } catch(e) {
         console.log(e);
@@ -43,8 +42,7 @@ export const getLLRandomNumber = async (values: {size: number, min_excl: number,
             ],
         }
         let numbers: MoveValue = await aptos.view({ payload: payload });
-        const {llRandomNumbers, llChartPoints} = convertLLNumbersToChartPoint(numbers[0], 0.5);
-        store.dispatch(setProps({key: "llRandomNumbers", value: llRandomNumbers}));
+        const {llChartPoints} = convertLLNumbersToChartPoint(numbers[0], 0.5);
         store.dispatch(setProps({key: "llChartPoints", value: llChartPoints}))
     } catch(e) {
         console.log(e);
@@ -69,8 +67,7 @@ export const getEXPRandomNumber = async (values: {size: number, min_excl: number
             ],
         }
         let numbers: MoveValue = await aptos.view({ payload: payload });
-        const {expRandomNumbers, expChartPoints} = convertExpNumbersToChartPoint(numbers[0], 1);
-        store.dispatch(setProps({key: "expRandomNumbers", value: expRandomNumbers}));
+        const {expChartPoints} = convertExpNumbersToChartPoint(numbers[0], 1);
         store.dispatch(setProps({key: "expChartPoints", value: expChartPoints}))
     } catch(e) {
         console.log(e);
@@ -88,8 +85,7 @@ export const getCQRandomNumber = async (values: {size: number, min_excl: number,
             functionArguments: [values.size.toString(), values.min_excl.toString(), values.max_excl.toString()],
         }
         let numbers: MoveValue = await aptos.view({ payload: payload });
-        const {cqRandomNumbers, cqChartPoints} = convertCQNumbersToChartPoint(numbers[0], 0.1);
-        store.dispatch(setProps({key: "cqRandomNumbers", value: cqRandomNumbers}));
+        const {cqChartPoints} = convertCQNumbersToChartPoint(numbers[0], 0.1);
         store.dispatch(setProps({key: "cqChartPoints", value: cqChartPoints}))
     } catch(e) {
         console.log(e);
