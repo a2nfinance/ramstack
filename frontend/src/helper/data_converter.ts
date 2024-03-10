@@ -1,5 +1,4 @@
 import { ChartPoint } from "@/controller/distribution/distributionSlice";
-import { TableColumnsType } from "antd";
 
 export const convertPathsData = (data: string[][], steps: number, rep: number) => {
     let paths: any[] = [];
