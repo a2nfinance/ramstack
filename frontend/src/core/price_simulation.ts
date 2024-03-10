@@ -1,4 +1,4 @@
-import { setPricePathProps } from "@/controller/simulation/simulationSlice";
+import { setPricePathProps, setSimulationProps } from "@/controller/simulation/simulationSlice";
 import { store } from "@/controller/store";
 import { convertPathsData } from "@/helper/data_converter";
 import { InputViewRequestData, MoveValue } from "@aptos-labs/ts-sdk";
@@ -7,7 +7,8 @@ import {
     abs,
     log,
     mean,
-    std
+    std,
+    exp
 } from 'mathjs';
 
 import { getAptos, packageAddress } from "./aptos_client";
@@ -29,6 +30,8 @@ export const getPricePaths = async (values: FormValues) => {
         store.dispatch(updateActionStatus({ actionName: actionNames.simulatePriceAction, value: true }));
         let { s0, r, sigma, is_positive_r } = await getTokenPriceHistory(values.pair, `${values.interval}${values.interval_type}`, values.limit);
         let t = BigInt(values.t * 2 ** 64);
+        // dispatch t here
+        store.dispatch(setSimulationProps({key: "t", value: values.t}));
         let nsteps = values.nsteps;
         let nrep = values.nrep;
         const payload: InputViewRequestData = {
@@ -70,10 +73,12 @@ export const getTokenPriceHistory = async (symbol: string, interval: string, lim
 
         console.log(`Mean price (mu): ${meanDailyReturn}`);
         console.log(`Standard deviation: ${movingVolatility}`);
+        // set R
+        store.dispatch(setSimulationProps({key: "r", value: meanDailyReturn}));
         return {
-            s0: BigInt(lastClosedPrice * 2 ** 64),
-            r: BigInt(abs(meanDailyReturn) * 2 ** 64),
-            sigma: BigInt(parseFloat(movingVolatility.toString()) * 2 ** 64),
+            s0: BigInt((lastClosedPrice * 2 ** 64).toFixed(0)),
+            r: BigInt((abs(meanDailyReturn) * 2 ** 64).toFixed(0)),
+            sigma: BigInt((parseFloat(movingVolatility.toString()) * 2 ** 64).toFixed(0)),
             is_positive_r: (meanDailyReturn > 0)
         }
     } catch (error) {
@@ -89,3 +94,28 @@ export const getTokenPriceHistory = async (symbol: string, interval: string, lim
 
 
 }
+
+
+export const calculateOptionPrice = (values: {call_or_put: "call" | "put", strike_price: number}) => {
+    try {
+
+        let {paths, rep, t, r} = store.getState().simulation;
+        let lastColumns = paths.map(p => p[`P${rep-1}`]);
+        let optionPrice = 0;
+        if (values.call_or_put === "call") {
+            let columSubK = lastColumns.map(lc => lc - values.strike_price);
+            let payoffs = columSubK.filter(value => value > 0);
+            optionPrice = mean(payoffs) * exp(r * t * -1);
+        } else {
+            let columSubK = lastColumns.map(lc => values.strike_price - lc);
+            let payoffs = columSubK.filter(value => value > 0);
+            optionPrice = mean(payoffs) * exp(r * t * -1);
+        }
+        
+        return optionPrice;
+        
+    } catch(e) {
+        console.log(e);
+    }
+    return 0;
+} 
