@@ -1,18 +1,22 @@
 import { useAppDispatch, useAppSelector } from "@/controller/hooks";
-import { changeVisibleCell } from "@/controller/simulation/simulationSlice";
+import { changeVisibleCell, changeVisiblePath } from "@/controller/simulation/simulationSlice";
 import { convertToDataSource } from "@/helper/data_converter";
-import { Table, TableColumnsType, Tag } from "antd";
+import { Card, Table, TableColumnsType, Tag } from "antd";
 
 
 
 
 export const DataPoints = () => {
-    const { paths, rep, visibleCells } = useAppSelector(state => state.simulation);
+    const { paths, rep, visibleCells, visiblePaths } = useAppSelector(state => state.simulation);
     const dispatch = useAppDispatch();
 
 
     const handleChangeCellVisible = (row_index, col_index) => {
-        dispatch(changeVisibleCell({row_index, col_index}));
+        dispatch(changeVisibleCell({ row_index, col_index }));
+    }
+
+    const handleChangeVisiblePath = (path_index) => {
+        dispatch(changeVisiblePath(path_index));
     }
     let columns: TableColumnsType<any> = [
         {
@@ -21,6 +25,14 @@ export const DataPoints = () => {
             key: 'path',
             width: 50,
             fixed: 'left',
+            render: (_, record, row_index) => (
+                <Tag  
+                style={{ cursor: "pointer" }}
+                title={visiblePaths[row_index] ? "Hide path" : "Show path"}
+                onClick={() => handleChangeVisiblePath(row_index)} 
+                color={visiblePaths[row_index] ? "green" : "gray"}
+                >{record.path}</Tag>
+            )
         },
         {
             title: 'Steps',
@@ -31,22 +43,20 @@ export const DataPoints = () => {
                     key: `${path.name}`,
                     width: 70,
                     render: (_, record, row_index) => (
-                        <Tag style={{cursor: "pointer"}} title={visibleCells[row_index][path_index] ? "Hide" : "Show"} onClick={() => handleChangeCellVisible(row_index, path_index)} color={visibleCells[row_index][path_index] ? "blue" : "gray"}>${record[path.name]}</Tag>
+                        <Tag style={{ cursor: "pointer" }} title={visibleCells[row_index][path_index] ? "Hide" : "Show"} onClick={() => handleChangeCellVisible(row_index, path_index)} color={visibleCells[row_index][path_index] ? "blue" : "gray"}>${record[path.name]}</Tag>
                     )
                 }
             }),
         },
     ];
     return (
-        
             <Table
                 pagination={false}
                 columns={columns}
                 dataSource={convertToDataSource(paths, rep)}
                 bordered
                 size="middle"
-                scroll={{ x: 'calc(700px + 50%)', y: 500 }}
+                scroll={{ x: 'calc(700px + 50%)', y: 300 }}
             />
-       
     )
 }

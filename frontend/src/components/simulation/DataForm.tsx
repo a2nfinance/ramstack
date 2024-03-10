@@ -105,6 +105,7 @@ export const DataForm = () => {
                         <Text>For example, if the limit number is 100, the interval is 1, and the type is hour, then the price data includes 100 price candles with an interval of 1 hour.</Text>
                         <Text>For example, if the number of paths is 10, the number of steps is 20, and the duration is 10 hours, then the price chart will display 10 possible price paths, each with 20 price points, all within a 10-hour period.</Text>
                         <Divider />
+                        
                         <Form.Item>
                             <Button loading={simulatePriceAction} size={"large"} type="primary" block htmlType="submit">Simulate price</Button>
                         </Form.Item>

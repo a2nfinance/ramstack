@@ -6,7 +6,7 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 
 
 export const Multiline = () => {
-    const { paths, minValue, maxValue, rep, visibleCells } = useAppSelector(state => state.simulation);
+    const { paths, minValue, maxValue, rep, visibleCells, visiblePaths } = useAppSelector(state => state.simulation);
     useEffect(() => {
         console.log("Start load");
     }, [])
@@ -46,8 +46,8 @@ export const Multiline = () => {
             data={paths}
             margin={{
                 top: 5,
-                right: 5,
-                left: 5,
+                right: 10,
+                left: 10,
                 bottom: 5,
             }}
         >
@@ -59,7 +59,13 @@ export const Multiline = () => {
             {
                 (new Array(rep).fill(0)).map((_, index) => {
                     let color = getRandomColor(index);
-                    return <Line key={`path-${index}`} type="monotone" dataKey={`P${index}`} stroke={color} activeDot={{ r: 8 }} />
+                    return <Line 
+                    key={`path-${index}`} 
+                    type="monotone" 
+                    dataKey={`P${index}`}  
+                    stroke={color} 
+                    display={!visiblePaths[index] ? "none" : ""}
+                    activeDot={{ r: 8 }} />
                 })
             }
         </LineChart>
