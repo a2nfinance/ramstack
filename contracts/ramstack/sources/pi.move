@@ -26,7 +26,7 @@ module ramstack::pi {
     }
 
     // Bailey_Borwein_Plouffe formula:
-    // PI = sum( (1/16**k) * sum( 4 / (8k + 1) - 2 / (8k + 4) - 1 / (8k + 5) - 1 / (8k + 6) ) )
+    // PI = sum( (1/16**k) * ( 4 / (8k + 1) - 2 / (8k + 4) - 1 / (8k + 5) - 1 / (8k + 6) ) )
     // k is number of replicate to approximate PI
     // This is a complex formula but it's very accurate and faster than Leibniz.
     public fun bbp_approx_pi(rep: u128): FixedPoint64 {

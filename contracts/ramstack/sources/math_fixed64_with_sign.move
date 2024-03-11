@@ -208,7 +208,7 @@ module ramstack::math_fixed64_with_sign {
 
         exp_result
     }
-    
+
     // Sum
     public fun sum(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
         let sum_result = fixed_point64_with_sign::create_from_raw_value(0, false);
@@ -222,8 +222,8 @@ module ramstack::math_fixed64_with_sign {
         sum_result
     }
 
-    //  Std: standard deviation
-    // std = sqrt( sum(arr[i] - mean)**2 /n )
+    // Std: standard deviation
+    // std = sqrt( sum( (arr[i] - mean)**2 /n ))
     public fun std(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
         let sum_result = fixed_point64_with_sign::create_from_raw_value(0, false);
         let mean = mean(numbers);
@@ -236,9 +236,9 @@ module ramstack::math_fixed64_with_sign {
             i = i + 1;
         };
 
-        let variace = div_u128(sum_result, (vector::length(&numbers) as u128));
+        let variance = div_u128(sum_result, (vector::length(&numbers) as u128));
         
-        sqrt(variace) 
+        sqrt(variance) 
     }
 
 }
