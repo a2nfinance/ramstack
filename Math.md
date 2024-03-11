@@ -2,13 +2,17 @@
 Given two random numbers of the uniform distribution: $U_0$, $U_1$ belong to $(0,1)$, then $Z_0$ and $Z_1$ follows the normal distribution can be calculated by:
 
 $$Z0=\sqrt{-2*\ln(U_0)} * \cos(2*\pi*U_1)$$
+
 $$Z1=\sqrt{-2*\ln(U_0)} * \sin(2*\pi*U_1)$$
 
 If we use Aptos Randomness API to create random numbers in range $(0,r)$, for example $u_0$ and $u_1$, then:
 
 $$U_0=\frac{u_0}{r}$$
+
 $$U_1=\frac{u_1}{r}$$
+
 $$Z0=\sqrt{\ln(\frac{r^2}{U_0^2})} * cos(2*\pi*\frac{u_1}{r})$$
+
 $$Z1=\sqrt{\ln(\frac{r^2}{U_0^2})} * sin(2*\pi*\frac{u_1}{r})$$
 
 # Exponential distribution - inverse CDF
@@ -22,9 +26,13 @@ Where:
 
 
 To transform from a uniform distribution to an exponential distribution, you need to find the inverse of the CDF of the exponential distribution. This involves solving for $x$ interm of $F(x)$:
+
 $$F(x)=1-e^{-\lambda x}$$
+
 $$e^{-\lambda x}= 1 - F(x)$$
+
 $$-\lambda x=\ln(1-F(x))$$
+
 $$x=-\frac{1}{\lambda}*\ln(1-F(x))$$
 
 If we use Aptos Randomness API to create random numbers in range $[0,r]$, for example $U$ then:
@@ -95,6 +103,4 @@ $$\ln(x)= lnFixed64 - 64*\ln(2)$$
 This value will be converted to FixedPoint64WithSign struct:
 
 $$signedValue=\{value: |\ln(x)|, positive: sgn(\ln(x))\}$$
-
-
 
