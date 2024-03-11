@@ -44,7 +44,7 @@ export const OptionPricePrediction = () => {
                         <Button icon={<CopyOutlined />}
                             onClick={() => { 
                                 navigator.clipboard.writeText(optionPrice.toFixed(5));
-                                messageApi.success("Copied address");
+                                messageApi.success("Copied option price");
                             }}
                             block>
                             Predicted option price: {optionPrice.toFixed(5)}
