@@ -92,15 +92,19 @@ $$\pi = \sum_{i=0}^{k}\frac{1}{16^i} * ( \frac{4}{8i + 1} - \frac{2}{8i + 4} - \
 
 
 ## Natural logarithm
-If we use ln_plus_32ln2 of math_fixed64 module, and the returned is:
+If we use $\ln(x << 64)$, the the returned result is:
 
 $$\ln(x * 2^{64})=\ln(x) + \ln(2^{64})=\ln(x) + 64*\ln(2)$$
 
-We call the result after using math_fixed64 is $lnFixed64$, then the original value of $ln(x)$ is:
+We call the result after using math_fixed64 $lnFixed64$, then we have this equation:
 
-$$\ln(x)= lnFixed64 - 64*\ln(2)$$
+$$lnFixed64= (\ln(x) - 64*\ln(2)) * 2^{64}= \ln(x) * 2^{64} + 64*LN2$$
+
+$$\ln(x) << 64 = lnFixed64 - 64*LN2$$
+
+Where $LN2$ is a constant value of $\ln(2) * 2^{64}$
 
 This value will be converted to FixedPoint64WithSign struct:
 
-$$signedValue=\{value: |\ln(x)|, positive: sgn(\ln(x))\}$$
+$$signedValue=\{ value: |\ln(x) * 2^{64}|, positive: sgn(\ln(x)) \}$$
 
