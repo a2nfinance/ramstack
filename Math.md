@@ -72,11 +72,13 @@ $$\partial{t} \sim \frac{T}{n}$$
 
 With historical price data, we can calculate $\mu$ and $\sigma$ from the client side as following:
 
-$$\mu=\sum_{i=0}^{k-1}(\frac{\log(cp_i) - \log(cp_{i+1})}{k})$$
+$$hourlyDailyReturn=\log(cp_i) - \log(cp_{i+1})$$
 
-$$\sigma=\sqrt{\sum_{i=0}^{k}\frac{(cp_i - \mu)^2}{k}}$$
+$$\mu=\sum_{i=0}^{k-1}(\frac{hourlyDailyReturn}{k})$$
 
-Where $\mu$ is the average of log of daily or hourly return, $cp_i$ is the closed price at index $i$, and $\sigma$ is standard deviation.
+$$\sigma=\sqrt{\sum_{i=0}^{k-1}\frac{(hourlyDailyReturn - \mu)^2}{k}}$$
+
+Where $\mu$ is the average of daily or hourly return, $cp_i$ is the closed price at index $i$, and $\sigma$ is standard deviation.
 
 # Other formulas
 ## Maclaurin series
