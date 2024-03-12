@@ -10,6 +10,7 @@ module ramstack::math_fixed64_with_sign {
     const EZEROLENGTH: u64 = 2;
     const LN2: u128 = 12786308645202655660;
 
+    // Divide a signed integer by an u128 number
     public fun div_u128(x: FixedPoint64WithSign, denominator: u128): FixedPoint64WithSign {
         let result = math_fixed64::mul_div(
             fixed_point64::create_from_raw_value(fixed_point64_with_sign::get_raw_value(x)),
@@ -23,7 +24,7 @@ module ramstack::math_fixed64_with_sign {
     }
 
 
-
+    // Multiply two signed integers
     public fun mul(x: FixedPoint64WithSign, y: FixedPoint64WithSign): FixedPoint64WithSign {
         let positive_x = fixed_point64_with_sign::is_positive(x);
         let positive_y = fixed_point64_with_sign::is_positive(y);
@@ -40,6 +41,7 @@ module ramstack::math_fixed64_with_sign {
         )
     }
 
+    // Divide two signed integers
     public fun div(x: FixedPoint64WithSign, y: FixedPoint64WithSign): FixedPoint64WithSign {
         assert!(fixed_point64_with_sign::get_raw_value(y) != 0, EZERO_DENOMINATOR);
 
@@ -58,6 +60,7 @@ module ramstack::math_fixed64_with_sign {
         )
     }
 
+    // Pow
     public fun pow(x: FixedPoint64WithSign, y: u64): FixedPoint64WithSign {
         let fixed_point64_number = math_fixed64::pow(
             fixed_point64::create_from_raw_value(
@@ -71,6 +74,7 @@ module ramstack::math_fixed64_with_sign {
         )
     }
     
+    // Square root of a FixedPoint64WithSign
     public fun sqrt(x: FixedPoint64WithSign): FixedPoint64WithSign {
         assert!(fixed_point64_with_sign::is_positive(x), ENEGATIVE);
         
@@ -86,6 +90,7 @@ module ramstack::math_fixed64_with_sign {
         )
     }
 
+    // Natural logarithm with sign
     public fun ln(x: FixedPoint64WithSign): FixedPoint64WithSign{
         assert!(fixed_point64_with_sign::is_positive(x), ENEGATIVE);
         let ln_plus_32ln2: FixedPoint64 = math_fixed64::ln_plus_32ln2(
@@ -166,7 +171,7 @@ module ramstack::math_fixed64_with_sign {
 
         log2_with_sign
     } 
-    // Mean
+    // Mean of an array: sum(array[i])/n
     public fun mean(numbers: vector<FixedPoint64WithSign>): FixedPoint64WithSign {
         // assert length here
         assert!(vector::length(&numbers) > 0, EZEROLENGTH);

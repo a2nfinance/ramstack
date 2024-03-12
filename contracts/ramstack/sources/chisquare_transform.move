@@ -5,6 +5,10 @@ module ramstack::chisquare_transform {
     use aptos_std::math_fixed64;
     use std::vector;
 
+    // Calculate a random number following the Chi-square distribution with one degree of freedom
+    // Step 1: Generate random numbers from the Aptos Randomness API.
+    // Step 2: Convert these numbers to random numbers of the normal distribution.
+    // Step 3: Square each converted number.
     public fun uniform_to_chisquare(uniform_numbers: vector<u64>, range: u128): vector<FixedPoint64> {
         let normalized_numbers:vector<FixedPoint64WithSign> = box_muller::uniform_to_normal(uniform_numbers, range);
 
@@ -20,6 +24,7 @@ module ramstack::chisquare_transform {
             if (max < raw_value) {max = raw_value};
             i = i + 1;
         };
+
         i = 0;
         while(i < vector::length(&normalized_numbers)) {
             let number = vector::borrow(&normalized_numbers, i);

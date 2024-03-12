@@ -1,7 +1,7 @@
 module ramstack::price_simulation {
 
     use ramstack::monte_carlo;
-
+    
     #[view]
     public fun get_spath_without_excl(s0: u128, r: u128, sigma: u128, t: u128, nsteps: u64, nrep: u64, is_positive_r: bool): vector<vector<u128>> {
         // max_excl: default value is 20

@@ -26,7 +26,7 @@ module ramstack::exponential_transform {
         );
 
         // -1 * ln(1-F(x)) is alway positive because F(x) belongs to (0,1).
-        // ln(a << 64) = ln(a) << 64 + 64*LN2
+        // ln(a << 64) << 64 = ln(a) << 64 + 64*LN2
         // ln(a) << 64 = ln_plus_32ln2 - 64*LN2
         // -1 * (ln_plus_32ln2 - 64*LN2) = 64*LN2 - ln_plus_32ln2;
         let corrected_number = math_fixed64::mul_div(

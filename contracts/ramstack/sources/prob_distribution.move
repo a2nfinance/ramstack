@@ -10,6 +10,8 @@ module ramstack::prob_distribution {
     const EINCORRECT_RANGE: u64 = 0;
     const EINCORRECT_SIZE: u64 = 0;
 
+
+    // Get random numbers following Normal Distribution
     #[view]
     public fun get_nd_random_numbers(size: u64, min_incl: u64, max_excl: u64): (vector<FixedPoint64WithSign>) {
 
@@ -34,6 +36,7 @@ module ramstack::prob_distribution {
 
     }
 
+    // Get random numbers following Exponential Distribution
     #[view]
     public fun get_ed_random_numbers(size: u64, min_incl: u64, max_excl: u64, lambda: u128): (vector<FixedPoint64>) {
 
@@ -55,7 +58,7 @@ module ramstack::prob_distribution {
         random_numbers
 
     }
-
+    // Get random numbers following Laplacian Distribution
     #[view]
     public fun get_ll_random_numbers(size: u64, min_incl: u64, max_excl: u64, mu: u128, beta: u128): (vector<FixedPoint64WithSign>) {
 
@@ -78,7 +81,7 @@ module ramstack::prob_distribution {
 
     }
 
-
+    // Get random numbers following Chi-square Distribution
     #[view]
     public fun get_cq_random_numbers(size: u64, min_incl: u64, max_excl: u64): (vector<FixedPoint64>) {
 

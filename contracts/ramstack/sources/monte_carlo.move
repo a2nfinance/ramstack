@@ -99,9 +99,12 @@ module ramstack::monte_carlo {
             generate_spath(s0, r, sigma, t, nsteps, nrep, is_positive_r, random_numbers)
     }
 
+    // Calculate this formula:
+    // exp( (mu - 0.5 * sigma**2) * dt + sigma * sqrt(dt) * Zt )
     fun calculate_exp(sign_nudt: FixedPoint64WithSign, sidt: FixedPoint64WithSign, random_number: FixedPoint64WithSign): FixedPoint64WithSign  {
         
 
+        //sigma * sqrt(dt) * Zt
         let mul_result: FixedPoint64WithSign = math_fixed64_with_sign::mul(
                 sidt,
                 random_number
@@ -118,6 +121,7 @@ module ramstack::monte_carlo {
                 )
         );
 
+        // If sign_add_result is negative, then correct_exp = 1/exp
         if (!fixed_point64_with_sign::is_positive(sign_add_result)) {
             exp = math_fixed64::mul_div(
                 fixed_point64::create_from_raw_value(1<<64), 
@@ -126,12 +130,14 @@ module ramstack::monte_carlo {
             )
         };
 
+        // return signed integer
         fixed_point64_with_sign::create_from_raw_value(
             fixed_point64::get_raw_value(exp),
             true
         )
     }
 
+    // Initialize a matrix 0 with rows and columns. 
     public fun init_2d_vector(step: u64, rep: u64, first_column_value: u128): vector<vector<u128>> {
         let spath = vector::empty<vector<u128>>();
         let i = 0;
@@ -157,6 +163,7 @@ module ramstack::monte_carlo {
 
     }
 
+    // Use randomness permution
     fun generate_random_using_permutation(nrep: u64, nsteps: u64): vector<FixedPoint64WithSign> {
         let range = nrep * nsteps + 1;
         let uniform_random_numbers = randomness::permutation(range);
@@ -166,6 +173,7 @@ module ramstack::monte_carlo {
         random_numbers
     }
 
+     // Use randomness u64_range
     fun generate_random_using_u64_range(nrep: u64, nsteps: u64, max_excl: u64): vector<FixedPoint64WithSign> {
         let size = nrep * nsteps;
         let i = 0;
