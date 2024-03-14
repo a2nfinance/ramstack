@@ -11,6 +11,7 @@ type State =  {
     rep: number,
     visibleCells: boolean[][],
     visiblePaths: boolean[],
+    isShowAll: boolean,
     r: number,
     t: number
 }
@@ -22,6 +23,7 @@ const initialState: State = {
     rep: 0,
     visibleCells: [],
     visiblePaths: [],
+    isShowAll: true,
     r: 0,
     t: 0
 }
@@ -47,9 +49,14 @@ export const simulationSlice = createSlice({
         },
         changeVisiblePath: (state, action: PayloadAction<number>) => {
             state.visiblePaths[action.payload] = !state.visiblePaths[action.payload];
+        },
+        changeShowAll: (state) => {
+            let isShowAll = !state.isShowAll;
+            state.visiblePaths = new Array(state.rep).fill(isShowAll);
+            state.isShowAll = isShowAll;
         }
     }
 })
 
-export const { setPricePathProps, setSimulationProps, changeVisibleCell, changeVisiblePath } = simulationSlice.actions;
+export const { setPricePathProps, setSimulationProps, changeVisibleCell, changeVisiblePath, changeShowAll } = simulationSlice.actions;
 export default simulationSlice.reducer;

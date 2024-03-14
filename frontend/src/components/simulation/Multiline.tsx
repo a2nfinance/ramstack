@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/controller/hooks';
 import { getRandomColor } from '@/helper/random_color';
-import { Card, Col, Divider, Row } from 'antd';
+import { Card, Col, Divider, Flex, Row, Space } from 'antd';
 import { useEffect } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -15,24 +15,41 @@ export const Multiline = () => {
         if (active && payload && payload.length) {
 
             let columnIndex = parseInt(label.replace("S", ""));
-            
+            let pointsPerPage = 10;
+            let numPages = payload.length / pointsPerPage;
+            if (numPages > parseInt(numPages.toString())) {
+                numPages = parseInt(numPages.toString()) + 1;
+            } else {
+                numPages = parseInt(numPages.toString())
+            }
+
+            let width = numPages * 90;
+
+            let multiCols = <>
+                {
+                    payload.map((pld) => {
+                        let rowIndex = parseInt(pld.dataKey.replace("P", ""));
+                        let visible = visibleCells?.[rowIndex]?.[columnIndex];
+                        if (visible) {
+                            return <p key={`${label}-${pld.dataKey}`} style={{ ...pld, visible: visible, minWidth: 80 }
+                            } > {`${pld.dataKey} : ${pld.value}`}</p>
+                        }
+
+                        return <></>
+                    }
+                    )
+                }
+            </>;
+
+
+
             return (
                 <div className="custom-tooltip" style={{ backgroundColor: "white", padding: "10px 15px" }}>
-                    <div className="label" style={{color: "#333333"}}>{label}</div>
+                    <div className="label" style={{ color: "#333333" }}>{label}</div>
                     <hr />
-                    {
-                        payload.map((pld) => {
-                            let rowIndex = parseInt(pld.dataKey.replace("P", ""));
-                            let visible = visibleCells?.[rowIndex]?.[columnIndex];
-                            if (visible) {
-                                return <p key={`${label}-${pld.dataKey}`} style={{ ...pld, visible: visible }
-                                } > {`${pld.dataKey} : ${pld.value}`}</p>
-                            }
-
-                            return <></>
-
-                        })
-                    }
+                    <Flex wrap="wrap" gap="small" style={{ width: width }}>
+                        {multiCols}
+                    </Flex>
 
                 </div >
             );
@@ -59,13 +76,13 @@ export const Multiline = () => {
             {
                 (new Array(rep).fill(0)).map((_, index) => {
                     let color = getRandomColor(index);
-                    return <Line 
-                    key={`path-${index}`} 
-                    type="monotone" 
-                    dataKey={`P${index}`}  
-                    stroke={color} 
-                    display={!visiblePaths[index] ? "none" : ""}
-                    activeDot={{ r: 8 }} />
+                    return <Line
+                        key={`path-${index}`}
+                        type="monotone"
+                        dataKey={`P${index}`}
+                        stroke={color}
+                        display={!visiblePaths[index] ? "none" : ""}
+                        activeDot={{ r: 8 }} />
                 })
             }
         </LineChart>

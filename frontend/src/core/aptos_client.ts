@@ -1,4 +1,4 @@
-import { Aptos, AptosConfig, InputViewRequestData, MoveValue, Network, ViewRequest } from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 const aptosConfig = new AptosConfig({ network: Network.RANDOMNET });
 let aptos: Aptos;
 export const getAptos = () => {

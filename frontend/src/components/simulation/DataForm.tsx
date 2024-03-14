@@ -1,8 +1,7 @@
 import { useAppSelector } from "@/controller/hooks";
 import { whitelistedPairs } from "@/core/config";
 import { getPricePaths } from "@/core/price_simulation";
-import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Row, Select } from "antd";
-import { Typography } from "antd";
+import { Alert, Button, Card, Col, Divider, Form, InputNumber, Row, Select, Typography } from "antd";
 const { Text } = Typography;
 export const DataForm = () => {
     const { simulatePriceAction } = useAppSelector(state => state.process);
@@ -21,13 +20,14 @@ export const DataForm = () => {
                 interval_type: "h",
                 nsteps: 20,
                 nrep: 10,
-                t: 10
+                t: 10,
+                nsimulation: 1
             }}
             onFinish={onFinish}
             layout='vertical'>
             <Row gutter={8}>
                 <Col span={8}>
-                    <Card title="Historical price data" style={{minHeight: 400}}>
+                    <Card title="Historical price data" style={{ minHeight: 410 }}>
                         <Row gutter={12}>
                             <Col span={12}>
                                 <Form.Item label="Token pair" name="pair" rules={[{ required: true, message: 'Missing token pair' }]}>
@@ -40,15 +40,14 @@ export const DataForm = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-
                         <Row gutter={12}>
                             <Col span={12}>
-                                <Form.Item label={"Interval"} name={"interval"} rules={[{ required: true, message: 'Missing token pair' }]}>
+                                <Form.Item label={"Interval value"} name={"interval"} rules={[{ required: true, message: 'Missing token pair' }]}>
                                     <InputNumber style={{ width: "100%" }} min={1} precision={0} />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label={"Type"} name={"interval_type"} rules={[{ required: true, message: 'Missing token pair' }]}>
+                                <Form.Item label={"Interval type"} name={"interval_type"} rules={[{ required: true, message: 'Missing token pair' }]}>
                                     <Select options={[
                                         {
                                             label: "Hour",
@@ -63,23 +62,19 @@ export const DataForm = () => {
                             </Col>
                         </Row>
 
-                        <Alert message={"For example, if the limit number is 100, the interval is 1, and the type is hour, then the price data includes 100 price candles with an interval of 1 hour."} type="info" showIcon />
+                        <Alert message={"If the limit number is 100, the interval value is 1, and the interval type is hour, then the price data includes 100 price candles with an interval of 1 hour. The interval type of price data is the same type as the time to maturity."} type="info" showIcon />
 
 
                     </Card>
                 </Col>
                 <Col span={8}>
-                    <Card title="Price simulation settings" style={{minHeight: 400}}>
+                    <Card title="Simulation settings" style={{ minHeight: 410 }}>
                         <Row gutter={12}>
                             <Col span={12}>
-                                <Form.Item label="Num of paths" name={"nrep"} rules={[{ required: true, message: 'Missing price paths' }]}>
-                                    <Select options={(new Array(15).fill(0)).map((_, index) => {
-                                        return {
-                                            label: index + 1,
-                                            value: index + 1
-                                        }
-                                    })} />
+                                <Form.Item label={"Time to maturity"} name={"t"} rules={[{ required: true, message: 'Missing time to maturity' }]}>
+                                    <InputNumber style={{ width: "100%" }} min={1} precision={0} />
                                 </Form.Item>
+
                             </Col>
                             <Col span={12}>
                                 <Form.Item label="Num of steps" name={"nsteps"} rules={[{ required: true, message: 'Missing price steps' }]}>
@@ -92,25 +87,45 @@ export const DataForm = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Form.Item label={"Time to maturity"} name={"t"} rules={[{ required: true, message: 'Missing time to maturity' }]}>
-                            <InputNumber style={{ width: "100%" }} min={1} precision={0} />
-                        </Form.Item>
+                        <Row gutter={12}>
+                            <Col span={12}>
+                                <Form.Item label="Num of paths" name={"nrep"} rules={[{ required: true, message: 'Missing price paths' }]}>
+                                    <Select options={(new Array(15).fill(0)).map((_, index) => {
+                                        return {
+                                            label: index + 1,
+                                            value: index + 1
+                                        }
+                                    })} />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Num of simulations" name={"nsimulation"} rules={[{ required: true, message: 'Missing price steps' }]}>
+                                    <InputNumber
+                                        style={{ width: "100%" }}
+                                        min={1}
+                                        max={10}
+                                        precision={0}
+                                        />
+                                </Form.Item>
+                            </Col>
+                        </Row>
 
-                        <Alert message={"For example, if the number of paths is 10, the number of steps is 20, and the duration is 10 hours, then the price chart will display 10 possible price paths, each with 20 price points, all within a 10-hour period."}
+
+                        <Alert message={"If the number of paths is 10, the number of steps is 20, the duration is 10 hours, and the number of simulations is 1, then the price chart will display 10 * 1 (num of paths * num of simulations) possible price paths, each with 20 price steps, all within a 10-hour period."}
                             type="info" showIcon />
                     </Card>
                 </Col>
                 <Col span={8}>
-                    <Card style={{minHeight: 400}}>
+                    <Card style={{ minHeight: 410 }}>
                         <Text>Historical price data is fetched from the Binance API, so it is always up to date. You can select one of the whitelisted token pairs. Price data will be pre-processed to obtain some statistical information before calling smart contracts that implement Monte Carlo algorithms.</Text>
                         <br />
                         <br />
                         <Text>Price simulation settings define how many paths and steps are shown on the chart. You can hide paths or prices on each step by clicking on the cell in the data table.</Text>
-                         <br />
-                         <br />
+                        <br />
+                        <br />
                         <Text>After the simulation, price data is shown on the chart. You can use this data to predict option prices for any strike price.</Text>
                         <Divider />
-                        
+
                         <Form.Item>
                             <Button loading={simulatePriceAction} size={"large"} type="primary" block htmlType="submit">Simulate price</Button>
                         </Form.Item>
