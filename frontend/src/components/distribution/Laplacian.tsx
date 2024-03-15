@@ -27,7 +27,7 @@ export const Laplacian = () => {
             layout='vertical'>
 
             <Form.Item label="Size" name={"size"} rules={[{ required: true, message: 'Missing size' }]}>
-              <InputNumber style={{ width: "100%" }} min={1} max={400} precision={0} />
+              <InputNumber style={{ width: "100%" }} min={1} max={500} precision={0} />
             </Form.Item>
             <Row gutter={12}>
               <Col span={12}>

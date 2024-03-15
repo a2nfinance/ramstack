@@ -25,7 +25,7 @@ export const Chisquare = () => {
                         layout='vertical'>
 
                         <Form.Item label="Size" name={"size"} rules={[{ required: true, message: 'Missing size' }]}>
-                            <InputNumber style={{ width: "100%" }} min={1} max={400} precision={0} />
+                            <InputNumber style={{ width: "100%" }} min={1} max={500} precision={0} />
                         </Form.Item>
                         <Form.Item label="Min excl" name={"min_excl"} rules={[{ required: true, message: 'Missing min excl' }]}>
                             <InputNumber style={{ width: "100%" }} min={0} precision={0} />
