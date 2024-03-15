@@ -5,7 +5,7 @@ Ramstack implements math modules and algorithms on-chain to simulate token pair 
 ## Demo information
 - [Frontend Application](https://ramstack.a2n.finance)
 - [Video demo]()
-- [Deployed Ramstack modules on RandomNet](https://explorer.aptoslabs.com/txn/21888195/changes?network=randomnet)
+- [Deployed Ramstack modules on RandomNet](https://explorer.aptoslabs.com/account/0x131af981c6ee5ee61c9440c5254f0448aef8e5cb8d2c321ff3024490c71eaaaa/modules/code/box_muller?network=randomnet)
 - [Math formulas](Math.md)
 
 
