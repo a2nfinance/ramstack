@@ -5,7 +5,7 @@ Ramstack implements math modules and algorithms on-chain to simulate token pair 
 ## Demo information
 - [Frontend Application](https://ramstack.a2n.finance)
 - [Video demo](https://www.youtube.com/watch?v=XihUttBCrcA)
-- [Deployed Ramstack modules on RandomNet](https://explorer.aptoslabs.com/account/0x131af981c6ee5ee61c9440c5254f0448aef8e5cb8d2c321ff3024490c71eaaaa/modules/code/box_muller?network=randomnet)
+- [Deployed Ramstack on RandomNet](https://explorer.aptoslabs.com/account/0x131af981c6ee5ee61c9440c5254f0448aef8e5cb8d2c321ff3024490c71eaaaa/modules/code/monte_carlo?network=randomnet)
 - [Math formulas](Math.md)
 
 
@@ -47,6 +47,7 @@ To build & test smart contract:
 - Go to smart contract folder, e.g. ```cd contracts/ramstack```
 - To compile: ```aptos move compile ```
 - To test: ```aptos move test```
+- To deploy: ```aptos move publish --expiration-secs 6000000```
 
 
 To run Ramstack frontend application:
