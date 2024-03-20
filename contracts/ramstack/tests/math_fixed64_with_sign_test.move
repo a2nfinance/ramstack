@@ -1,5 +1,5 @@
 #[test_only]
-module ramstack::math_fixed_point64_with_sign_test {
+module ramstack::math_fixed64_with_sign_test {
 
     use ramstack::math_fixed64_with_sign;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
