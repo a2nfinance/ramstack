@@ -116,4 +116,14 @@ module ramstack::fixed_point64_with_sign {
         };
         false
     }
+
+    public fun less(x: FixedPoint64WithSign, y: FixedPoint64WithSign): bool {
+        let y_sub_x: FixedPoint64WithSign = sub(y, x);
+        is_positive(y_sub_x)
+    }
+
+    public fun greater_or_equal(x: FixedPoint64WithSign, y: FixedPoint64WithSign): bool {
+        let x_sub_y: FixedPoint64WithSign = sub(x, y);
+        is_positive(x_sub_y) || get_raw_value(x_sub_y) == 0
+    }
 }

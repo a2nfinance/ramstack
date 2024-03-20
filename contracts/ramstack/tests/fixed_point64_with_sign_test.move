@@ -46,7 +46,7 @@ module ramstack::fixed_point64_with_sign_test {
 
     #[test]
     public fun test_sub_with_negative() {
-         let x = fixed_point64_with_sign::create_from_raw_value(
+        let x = fixed_point64_with_sign::create_from_raw_value(
             2 << 64,
             true
         );
@@ -63,4 +63,20 @@ module ramstack::fixed_point64_with_sign_test {
 
         assert!(is_equal, 2);
     }
+
+
+    #[test]
+    public fun test_less() {
+        let x = fixed_point64_with_sign::create_from_raw_value(
+            4 << 64,
+            false
+        );
+        let y = fixed_point64_with_sign::create_from_raw_value(
+            1 << 64,
+            true
+        );
+
+        assert!(fixed_point64_with_sign::less(x, y), 3);
+    }
+
 }
