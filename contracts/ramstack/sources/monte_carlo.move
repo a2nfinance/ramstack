@@ -15,8 +15,6 @@
 // Box-muller method supports that.
 module ramstack::monte_carlo {
     use std::vector;
-    use aptos_std::fixed_point64;
-    use aptos_std::math_fixed64;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::math_fixed64_with_sign;
     use ramstack::box_muller;
@@ -115,26 +113,11 @@ module ramstack::monte_carlo {
             mul_result
         );
 
-        let exp = math_fixed64::exp(
-                fixed_point64::create_from_raw_value(
-                    fixed_point64_with_sign::get_raw_value(sign_add_result)
-                )
+        let exp = math_fixed64_with_sign::exp(
+                sign_add_result
         );
 
-        // If sign_add_result is negative, then correct_exp = 1/exp
-        if (!fixed_point64_with_sign::is_positive(sign_add_result)) {
-            exp = math_fixed64::mul_div(
-                fixed_point64::create_from_raw_value(1<<64), 
-                fixed_point64::create_from_raw_value(1<<64),
-                exp
-            )
-        };
-
-        // return signed integer
-        fixed_point64_with_sign::create_from_raw_value(
-            fixed_point64::get_raw_value(exp),
-            true
-        )
+        exp
     }
 
     // Initialize a matrix 0 with rows and columns. 

@@ -4,13 +4,12 @@
 // Z2 = sqrt(-2*ln(U1)) * sin(2*PI*U2)
 module ramstack::box_muller {
     use std::vector;
-    use aptos_std::fixed_point64::{Self, FixedPoint64};
-    use aptos_std::math_fixed64;
     use aptos_std::math128;
 
     use ramstack::cos_sin;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::pi;
+    use ramstack::math_fixed64_with_sign;
     const LN2: u128 = 12786308645202655660;
 
     // random_numbers: a vector of u64 random numbers within the specified range.
@@ -51,40 +50,30 @@ module ramstack::box_muller {
             math128::mul_div(2 * pi_value, u2, range),
             10
         );
-        // U1 need to be converted to (0,1): u1 = u1/range
-        // -2 * ln(u1) = ln(u1**(-2))= ln(1 / u1**2) = ln(range**2 / u1**2).
+        // U1 need to be converted to (0,1): U1 = u1/range
+        // -2 * ln(U1) = ln(U1**(-2))= ln(1 / U1**2) = ln(range**2 / u1**2).
         // This value is always positive because the standardlized u1 belongs to (0,1).
-        let ln_u1 = math_fixed64::ln_plus_32ln2(
-            fixed_point64::create_from_rational(range * range, u1 * u1)
+        let ln_square_normalized_u1: FixedPoint64WithSign = math_fixed64_with_sign::ln(
+            fixed_point64_with_sign::create_from_rational(range * range, u1 * u1, true)
         );
         
-        let multiply_64ln2 = 64 * LN2;
-        let sqrt_u1: FixedPoint64 = math_fixed64::sqrt(
-                // ln(u1 << 64) = ln(u1) << 64 + 64*LN2
-                // ln(u1) << 64 = ln_plus_32ln2 - 64*LN2
-                fixed_point64::sub(ln_u1, fixed_point64::create_from_raw_value(multiply_64ln2))
-        );
-        let z0: FixedPoint64 = math_fixed64::mul_div(
-            sqrt_u1,
-            fixed_point64::create_from_raw_value(fixed_point64_with_sign::get_raw_value(cos_u2)),
-            fixed_point64::create_from_raw_value(1 << 64)
+    
+        let sqrt: FixedPoint64WithSign = math_fixed64_with_sign::sqrt(ln_square_normalized_u1);
+
+        let z0: FixedPoint64WithSign = math_fixed64_with_sign::mul(
+            sqrt,
+            cos_u2,
         );
 
-        let z1: FixedPoint64 = math_fixed64::mul_div(
-            sqrt_u1,
-            fixed_point64::create_from_raw_value(fixed_point64_with_sign::get_raw_value(sin_u2)),
-            fixed_point64::create_from_raw_value(1 << 64)
+        let z1: FixedPoint64WithSign = math_fixed64_with_sign::mul(
+            sqrt,
+            sin_u2,
+  
         );
 
         (
-            fixed_point64_with_sign::create_from_raw_value(
-                fixed_point64::get_raw_value(z0), 
-                fixed_point64_with_sign::is_positive(cos_u2)
-            ),
-            fixed_point64_with_sign::create_from_raw_value(
-                fixed_point64::get_raw_value(z1), 
-                fixed_point64_with_sign::is_positive(sin_u2)
-            )
+            z0,
+            z1
         )
         
     }
