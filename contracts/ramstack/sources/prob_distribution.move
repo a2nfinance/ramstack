@@ -8,7 +8,7 @@ module ramstack::prob_distribution {
     use ramstack::fixed_point64_with_sign::{FixedPoint64WithSign};
     use aptos_std::fixed_point64::{Self, FixedPoint64};
     const EINCORRECT_RANGE: u64 = 0;
-    const EINCORRECT_SIZE: u64 = 0;
+    const EINCORRECT_SIZE: u64 = 1;
 
 
     // Get random numbers following Normal Distribution
