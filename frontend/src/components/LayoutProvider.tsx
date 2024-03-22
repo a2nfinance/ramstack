@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const LayoutProvider = (props: Props) => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const router = useRouter();
     const {
         token: { colorBgContainer },
@@ -137,7 +137,8 @@ export const LayoutProvider = (props: Props) => {
                         // background: colorBgContainer,
                         width: "100%",
                         marginRight: "auto",
-                        marginLeft: "auto"
+                        marginLeft: "auto",
+                        overflowX: "auto"
                     }}
                 >
                     {props.children}
