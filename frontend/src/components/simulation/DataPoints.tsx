@@ -62,7 +62,7 @@ export const DataPoints = () => {
             dataSource={convertToDataSource(paths, rep)}
             bordered
             size="middle"
-            scroll={{ x: 'calc(700px + 50%)', y: 300 }}
+            scroll={{ x: true, y: 300 }}
         />
     )
 }
