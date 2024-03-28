@@ -18,7 +18,6 @@ module ramstack::monte_carlo {
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::math_fixed64_with_sign;
     use ramstack::box_muller;
-    use aptos_framework::randomness;
 
     // s0: price value on Step 0.
     // r: Asset`s historical return
@@ -149,26 +148,12 @@ module ramstack::monte_carlo {
     // Use randomness permution
     fun generate_random_using_permutation(nrep: u64, nsteps: u64): vector<FixedPoint64WithSign> {
         let range = nrep * nsteps + 1;
-        let uniform_random_numbers = randomness::permutation(range);
-        let (_, index_of_zero) = vector::index_of<u64>(&uniform_random_numbers, &(0));
-        vector::remove(&mut uniform_random_numbers, index_of_zero);
-        let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (range as u128));
-        random_numbers
+        box_muller::generate_numbers_with_permutation(range)
     }
 
      // Use randomness u64_range
     fun generate_random_using_u64_range(nrep: u64, nsteps: u64, max_excl: u64): vector<FixedPoint64WithSign> {
         let size = nrep * nsteps;
-        let i = 0;
-        let uniform_random_numbers = vector::empty<u64>();
-        while( i < size) {
-            // to ensure all random numbers belong to (0,1) after the standardization process.
-            let number = randomness::u64_range(1, max_excl);
-            vector::push_back(&mut uniform_random_numbers, number);
-            i = i + 1;
-        };
-
-        let random_numbers = box_muller::uniform_to_normal(uniform_random_numbers, (max_excl as u128));
-        random_numbers
+        box_muller::generate_numbers_with_range(size, 0, max_excl)
     }
 }

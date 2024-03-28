@@ -18,19 +18,7 @@ module ramstack::prob_distribution {
         assert!(max_excl > min_incl, EINCORRECT_RANGE);
         assert!(size > 0, EINCORRECT_SIZE);
 
-        let range = max_excl - min_incl;
-        let random_numbers: vector<u64> = vector::empty<u64>();
-        let i = 0 ;
-
-        while( i < size ) {
-           
-            let random_number = randomness::u64_range(min_incl + 1, max_excl);
-            random_number = random_number - min_incl;
-            vector::push_back(&mut random_numbers, random_number);
-            i = i + 1;
-        };
-
-        let normalized_random_numbers = box_muller::uniform_to_normal(random_numbers, (range as u128));
+        let normalized_random_numbers = box_muller::generate_numbers_with_range(size, min_incl, max_excl);
 
         normalized_random_numbers
 
