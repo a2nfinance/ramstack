@@ -5,18 +5,53 @@
 module ramstack::box_muller {
     use std::vector;
     use aptos_std::math128;
+    use aptos_framework::randomness;
 
     use ramstack::cos_sin;
     use ramstack::fixed_point64_with_sign::{Self, FixedPoint64WithSign};
     use ramstack::pi;
     use ramstack::math_fixed64_with_sign;
+
     const LN2: u128 = 12786308645202655660;
 
     // random_numbers: a vector of u64 random numbers within the specified range.
-    // range: counts from 0, for example: (0,20)
+    // This function will be removed before this module is deployed on the Aptos mainnet.
     public fun uniform_to_normal(random_numbers: vector<u64>, range: u128): vector<FixedPoint64WithSign> {
-        let (first_part, second_part) = get_two_parts(random_numbers);
+        vector::empty<FixedPoint64WithSign>()
+    }
 
+
+    // size: size of random numbers
+    public fun generate_numbers_with_permutation(range: u64): vector<FixedPoint64WithSign> {
+    
+        let random_numbers = randomness::permutation(range);
+        let (_, index_of_zero) = vector::index_of<u64>(&random_numbers, &(0));
+        vector::remove(&mut random_numbers, index_of_zero);
+        let random_numbers = convert_random_numbers(random_numbers, (range as u128));
+        random_numbers
+        
+    }
+
+    // size: size of random numbers
+    // The Randomness API will generate random numbers in the range (min_incl, max_excl)
+    public fun generate_numbers_with_range(size: u64, min_incl: u64, max_excl: u64): vector<FixedPoint64WithSign> {
+        let range = max_excl - min_incl;
+        let random_numbers: vector<u64> = vector::empty<u64>();
+        let i = 0 ;
+
+        while( i < size ) {
+            let random_number = randomness::u64_range(min_incl + 1, max_excl);
+            random_number = random_number - min_incl;
+            vector::push_back(&mut random_numbers, random_number);
+            i = i + 1;
+        };
+        let random_numbers = convert_random_numbers(random_numbers, (range as u128));
+        random_numbers
+    }
+
+
+    fun convert_random_numbers(random_numbers: vector<u64>, range: u128): vector<FixedPoint64WithSign> {
+        let (first_part, second_part) = get_two_parts(random_numbers);
   
         let len_first_part = vector::length(&first_part);
 
@@ -33,7 +68,6 @@ module ramstack::box_muller {
 
         vector::append(&mut nomalized_first_part, nomalized_second_part);
         nomalized_first_part
-
     }
 
     // u1 and u2 belong to (0, range)
